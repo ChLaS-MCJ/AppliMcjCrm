@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap');
+
+/*--------------Utils-----------------*/
+@import './Utils/Normalizer.css';
+@import './Utils/Transition.css';
+
+/*--------------Template-----------------*/
+@import './Template/CustomAntd.css';
+@import './Template/Template.css';
+
+/*--------------Layout-----------------*/
+@import './Layout/Layout.css';
+@import './Layout/Header.css';
+@import './Layout/SidePanel.css';
+@import './Layout/navigation.css';
+
+/*--------------Pages-----------------*/
+@import './Pages/auth.css';
+
+/*--------------Components-----------------*/
+@import './Components/collapseBox.css';
+
