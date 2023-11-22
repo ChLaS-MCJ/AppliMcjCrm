@@ -5,10 +5,16 @@ import { Layout, theme } from 'antd';
 import HeaderContent from '@/Layout/Header/Header';
 import Navigation from '@/Layout/SideBarDashboard/SideBarDashboard';
 const { Content, Footer } = Layout;
+
+import { useSelector } from 'react-redux';
+
 export default function Dashboard() {
 
   const [contentHeight, setContentHeight] = useState(0);
   const contentRef = useRef(null);
+
+  const isCollapsed = useSelector(state => state.SideBar.collapsed);
+  console.log('Is collapsed?', isCollapsed);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -26,12 +32,12 @@ export default function Dashboard() {
       <Navigation />
 
       <Layout className="site-layout" style={{
-        marginLeft: 220,
+        marginLeft: !isCollapsed ? "220px" : "80px",
         overflow: 'auto',
         height: '90vh',
       }}>
         <HeaderContent />
-        <Content className="site-layout" style={{ padding: '10px 25px', minHeight: 360, borderRadius: '8px', }}>
+        <Content className="site-layout" style={{ padding: '10px 20px', minHeight: 360, borderRadius: '8px', }}>
 
           <div style={{ padding: 24, textAlign: 'center', background: colorBgContainer }}>
             <p>long content</p>

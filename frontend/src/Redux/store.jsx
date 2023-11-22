@@ -17,9 +17,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import { authReducer } from "@/Redux/Auth/Reducer";
+import { sideBarReducer } from "@/Redux/SideBar/Reducer";
 
 export const store = configureStore({
     reducer: {
         Auth: authReducer.reducer,
+        SideBar: sideBarReducer.reducer,
     }
-})
+});

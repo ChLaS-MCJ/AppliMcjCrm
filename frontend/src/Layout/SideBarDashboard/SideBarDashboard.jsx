@@ -20,6 +20,11 @@ import {
   MenuUnfoldOutlined,
 } from '@ant-design/icons';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { sideBarReducer } from '@/Redux/SideBar/Reducer'; // Assurez-vous d'avoir le bon chemin
+
+
+
 const { Sider } = Layout;
 
 
@@ -152,18 +157,22 @@ function MobileSidebar({ visible, onClose }) {
 }
 
 export default function Navigation() {
-  const [collapsed, setCollapsed] = useState(false);
   const [mobileSidebarVisible, setMobileSidebarVisible] = useState(false);
-
-
   let location = useLocation();
   const [currentPath, setCurrentPath] = useState(location.pathname);
+
+  // Redux
+  const dispatch = useDispatch();
+  const collapsed = useSelector(state => state.SideBar.collapsed);
 
   useEffect(() => {
     if (location && currentPath !== location.pathname) setCurrentPath(location.pathname);
   }, [location, currentPath]);
 
-  const toggleSidebar = () => setCollapsed(!collapsed);
+  const toggleSidebar = () => {
+    // Dispatch l'action pour mettre à jour l'état collapsed dans le store
+    dispatch(sideBarReducer.actions.setCollapsed(!collapsed));
+  };
   const showMobileSidebar = () => setMobileSidebarVisible(true);
   const hideMobileSidebar = () => setMobileSidebarVisible(false);
 
