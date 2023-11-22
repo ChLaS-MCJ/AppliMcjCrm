@@ -37,7 +37,7 @@ Axios.interceptors.response.use(
     (response) => response,
     async (error) => {
         if (error.response && error.response.status === 401) {
-
+            //Test la date du token +15min
             const refreshToken = await AuthService.getRefreshToken();
             if (refreshToken) {
                 try {

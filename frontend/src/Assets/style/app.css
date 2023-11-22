@@ -13,10 +13,9 @@
 @import './Layout/Header.css';
 @import './Layout/SidePanel.css';
 @import './Layout/navigation.css';
-
+@import './Layout/Footer.css';
 /*--------------Pages-----------------*/
 @import './Pages/auth.css';
 
 /*--------------Components-----------------*/
 @import './Components/collapseBox.css';
-
