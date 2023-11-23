@@ -16,6 +16,6 @@
 @import './Layout/Footer.css';
 /*--------------Pages-----------------*/
 @import './Pages/auth.css';
-
+@import './Pages/Dashboard.css';
 /*--------------Components-----------------*/
 @import './Components/collapseBox.css';

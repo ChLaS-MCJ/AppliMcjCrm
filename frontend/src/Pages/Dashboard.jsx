@@ -7,14 +7,13 @@ import Navigation from '@/Layout/SideBarDashboard/SideBarDashboard';
 const { Content, Footer } = Layout;
 
 import { useSelector } from 'react-redux';
-
+import useIsMobile from '@/hooks/useIsMobile';
 export default function Dashboard() {
 
   const [contentHeight, setContentHeight] = useState(0);
   const contentRef = useRef(null);
 
   const isCollapsed = useSelector(state => state.SideBar.collapsed);
-  console.log('Is collapsed?', isCollapsed);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -25,6 +24,7 @@ export default function Dashboard() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const isMobile = useIsMobile();
 
   return (
     <Layout style={{ minHeight: '100vh' }} hasSider>
@@ -32,18 +32,18 @@ export default function Dashboard() {
       <Navigation />
 
       <Layout className="site-layout" style={{
-        marginLeft: !isCollapsed ? "220px" : "80px",
+        marginLeft: isMobile ? '0' : (isCollapsed ? '80px' : '220px'),
         overflow: 'auto',
         height: '90vh',
       }}>
         <HeaderContent />
         <Content className="site-layout" style={{ padding: '10px 20px', minHeight: 360, borderRadius: '8px', }}>
 
-          <div style={{ padding: 24, textAlign: 'center', background: colorBgContainer }}>
+          <div className="contentmain" style={{ padding: 24, textAlign: 'center', background: colorBgContainer }}>
             <p>long content</p>
             {
               // indicates very long content
-              Array.from({ length: 80 }, (_, index) => (
+              Array.from({ length: 34 }, (_, index) => (
                 <React.Fragment key={index}>
                   {index % 20 === 0 && index ? 'more' : '...'}
                   <br />

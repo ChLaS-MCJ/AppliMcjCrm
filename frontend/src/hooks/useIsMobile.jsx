@@ -5,10 +5,10 @@ export default function useIsMobile(width = 768) {
 
   useEffect(() => {
     function handleResize() {
-      setIsMobile(window.innerWidth < width); // Adjust the breakpoint as per your requirements
+      setIsMobile(window.innerWidth < width);
     }
 
-    handleResize(); // Initial check
+    handleResize();
 
     window.addEventListener('resize', handleResize);
 

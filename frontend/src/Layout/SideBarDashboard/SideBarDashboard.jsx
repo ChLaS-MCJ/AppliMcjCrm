@@ -23,10 +23,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { sideBarReducer } from '@/Redux/SideBar/Reducer'; // Assurez-vous d'avoir le bon chemin
 
-
-
 const { Sider } = Layout;
-
 
 const items = [
   {
@@ -75,7 +72,6 @@ const items = [
     label: <Link to={'/admin'}>admin</Link>,
   },
 ];
-
 function Logo({ collapsed, onClick }) {
   const logoSrc = collapsed ? logoIconMobile : logoIcon;
   const logoStyle = { height: collapsed ? '80%' : '100%' };
@@ -86,7 +82,6 @@ function Logo({ collapsed, onClick }) {
     </div>
   );
 }
-
 function SidebarContent({ items }) {
   return (
     <>
@@ -94,7 +89,6 @@ function SidebarContent({ items }) {
     </>
   );
 }
-
 function SidebarButton({ collapsed, onClick }) {
   return (
     <Button
@@ -113,7 +107,6 @@ function SidebarButton({ collapsed, onClick }) {
     />
   );
 }
-
 function Sidebar({ collapsible, collapsed, onCollapse }) {
   return (
     <Sider
@@ -140,7 +133,6 @@ function Sidebar({ collapsible, collapsed, onCollapse }) {
     </Sider>
   );
 }
-
 function MobileSidebar({ visible, onClose }) {
   return (
     <Drawer
@@ -157,11 +149,10 @@ function MobileSidebar({ visible, onClose }) {
 }
 
 export default function Navigation() {
-  const [mobileSidebarVisible, setMobileSidebarVisible] = useState(false);
+  const [mobileSidebarVisible, setMobileSidebarVisible] = useState(true);
   let location = useLocation();
   const [currentPath, setCurrentPath] = useState(location.pathname);
 
-  // Redux
   const dispatch = useDispatch();
   const collapsed = useSelector(state => state.SideBar.collapsed);
 
@@ -170,7 +161,6 @@ export default function Navigation() {
   }, [location, currentPath]);
 
   const toggleSidebar = () => {
-    // Dispatch l'action pour mettre à jour l'état collapsed dans le store
     dispatch(sideBarReducer.actions.setCollapsed(!collapsed));
   };
   const showMobileSidebar = () => setMobileSidebarVisible(true);
@@ -179,7 +169,7 @@ export default function Navigation() {
   return (
     <>
       <div className="sidebar-wraper">
-        <Sidebar collapsible={false} collapsed={collapsed} onCollapse={toggleSidebar} />
+        <Sidebar collapsible={true} collapsed={collapsed} onCollapse={toggleSidebar} />
       </div>
       <Button
         type="text"

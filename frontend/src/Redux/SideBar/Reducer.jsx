@@ -23,7 +23,8 @@ export const sideBarReducer = createSlice({
          */
         setCollapsed: (state, action) => {
             state.collapsed = action.payload;
-        }
+        },
+
     },
 
 })
