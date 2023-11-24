@@ -40,7 +40,7 @@ export default function Dashboard() {
         <Content className="site-layout" style={{ padding: '10px 20px', minHeight: 360, borderRadius: '8px', }}>
 
           <div className="contentmain" style={{ padding: 24, textAlign: 'center', background: colorBgContainer }}>
-            <p>long content</p>
+            <p>Dashboard</p>
             {
               // indicates very long content
               Array.from({ length: 34 }, (_, index) => (

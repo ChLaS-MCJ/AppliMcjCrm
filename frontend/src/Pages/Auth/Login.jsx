@@ -56,22 +56,18 @@ const LoginPage = () => {
       })
   };
 
-  useEffect(() => {
-    if (isSuccess) navigate('/');
-  }, [isSuccess]);
-
   return (
     <>
       <AuthLayout sideContent={<SideContent />}>
-        <Content style={{padding: '10px 20px',}}></Content>
-        <Content style={{padding: '140px 30px 30px',maxWidth: '440px',margin: '0 auto',}}>
+        <Content style={{ padding: '10px 20px', }}></Content>
+        <Content style={{ padding: '140px 30px 30px', maxWidth: '440px', margin: '0 auto', }}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 0 }} span={0}>
-            <img src={logomobile} alt="Logo" style={{ margin: '-70px auto 40px',display: 'block',}}/>
-            </Col>
+            <img src={logomobile} alt="Logo" style={{ margin: '-70px auto 40px', display: 'block', }} />
+          </Col>
           <Title level={1}>Se Connecter</Title>
           <Divider />
           <div className="site-layout-content">
-            <Form layout="vertical" name="normal_login" className="login-form" initialValues={{ remember: true,}} onFinish={onFinish}>
+            <Form layout="vertical" name="normal_login" className="login-form" initialValues={{ remember: true, }} onFinish={onFinish}>
               <LoginForm />
               <Form.Item>
                 <Button type="primary" htmlType="submit" className="login-form-button" loading={isLoading} size="large">

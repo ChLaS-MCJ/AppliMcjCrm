@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { logout as logoutAction } from '@/redux/auth/actions';
 import PageLoader from '@/Components/PageLoader';
 
 /**
@@ -12,18 +10,11 @@ import PageLoader from '@/Components/PageLoader';
  * @returns {JSX.Element} The Logout component
  */
 const Logout = () => {
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
-
-  /**
-   * Dispatches the logout action
-   */
-  const asyncLogout = () => {
-    dispatch(logoutAction());
-  };
-
+  console.log("je passe au logout")
   useEffect(() => {
-    asyncLogout();
+
     window.localStorage.removeItem('auth');
     navigate('/login');
   }, []);

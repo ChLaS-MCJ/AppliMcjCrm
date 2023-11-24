@@ -1,6 +1,5 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-
 import AuthService from "@/Services/Auth.service";
 
 /**
@@ -15,19 +14,19 @@ import AuthService from "@/Services/Auth.service";
 const AuthRoute = ({ children, isPrivate }) => {
   const isLoggedIn = AuthService.isLogged();
 
-  if (isPrivate) {
-    if (isLoggedIn) {
-      return <>{children}</>;
-    } else {
-      return <Navigate to="/login" replace />;
-    }
-  } else {
-    if (isLoggedIn) {
-      return <Navigate to="/" replace />;
-    } else {
-      return <>{children}</>;
-    }
-  }
+  return isPrivate ? (
+    isLoggedIn ? (
+      <>{children}</>
+    ) : (
+      <Navigate to="/login" replace />
+    )
+  ) : (
+    isLoggedIn ? (
+      <Navigate to="/dashboard" replace />
+    ) : (
+      <>{children}</>
+    )
+  );
 };
 
 export default AuthRoute;

@@ -51,19 +51,12 @@ export default function HeaderContent() {
       ),
     },
     {
-      icon: <SettingOutlined />,
-      key: 'settingApp',
-      label: <Link to={'/settings'}>{"app_settings"}</Link>,
-    },
-
-    {
       type: 'divider',
     },
-
     {
       icon: <LogoutOutlined />,
       key: 'logout',
-      label: <Link to={'/logout'}>{"logout"}</Link>,
+      label: <Link to={'/logout'}>Déconnexion</Link>,
     },
   ];
   return (

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button, Drawer, Layout, Menu } from 'antd';
 
 import logoIcon from '@/Assets/images/JustLogo.png';
@@ -32,9 +32,9 @@ const items = [
     label: <Link to={'/dashboard'}>dashboard</Link>,
   },
   {
-    key: 'lead',
+    key: 'clients',
     icon: <UserAddOutlined />,
-    label: <Link to={'/lead'}>lead</Link>,
+    label: <Link to={'/clients'}>Clients</Link>,
   },
   {
     key: 'offer',
@@ -82,6 +82,7 @@ function Logo({ collapsed, onClick }) {
     </div>
   );
 }
+
 function SidebarContent({ items }) {
   return (
     <>
@@ -117,10 +118,10 @@ function Sidebar({ collapsible, collapsed, onCollapse }) {
       style={{
         overflow: 'auto',
         width: collapsed ? 'auto' : '400px',
-        height: collapsed ? '100vh' : '90vh',
+        height: collapsed ? '100vh' : '95vh',
         position: 'fixed',
         left: collapsed ? '0' : '20px',
-        top: collapsed ? '0' : '50px',
+        top: collapsed ? '0' : '30px',
         bottom: collapsed ? '0' : '20px',
         borderRadius: '8px',
         boxShadow: '0px 0px 20px 3px rgb(150, 190, 238, 0.15)',
