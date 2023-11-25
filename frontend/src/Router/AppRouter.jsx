@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { useRoutes } from 'react-router-dom';
+import { useRoutes, Navigate } from 'react-router-dom';
 import GuardRoutes from './Middleware/Guardrouter';
 import PageLoader from '@/Components/PageLoader';
 
@@ -9,9 +9,9 @@ const RegisterPage = lazy(() => import('@/Pages/Auth/Register'));
 const ResendPassword = lazy(() => import('@/Pages/Auth/ResendPassword'));
 const ResetPassword = lazy(() => import('@/Pages/Auth/ResetPassword'));
 const Logout = lazy(() => import('@/Pages/Auth/Logout.jsx'));
-const Dashboard = lazy(() => import('@/Pages/Private/Dashboard'));
+const MainLayout = lazy(() => import('@/Layout/MainLayout'));
 const Clients = lazy(() => import('@/Pages/Private/Clients'));
-
+const Dashboard = lazy(() => import('@/Pages/Private/Dashboard'));
 const AppRouter = () => {
   const element = useRoutes([
     {
@@ -36,15 +36,21 @@ const AppRouter = () => {
     },
     {
       path: '/',
-      element: <GuardRoutes isPrivate={true}><Dashboard /></GuardRoutes>,
-    },
-    {
-      path: '/dashboard',
-      element: <GuardRoutes isPrivate={true}><Dashboard /></GuardRoutes>,
-    },
-    {
-      path: '/clients',
-      element: <GuardRoutes isPrivate={true}><Clients /></GuardRoutes>,
+      element: <GuardRoutes isPrivate={true}><MainLayout /></GuardRoutes>,
+      children: [
+        {
+          path: "dashboard",
+          element: <Dashboard />
+        },
+        {
+          path: 'clients',
+          element: <Clients />
+        },
+        {
+          path: '/',
+          element: <Navigate to="/dashboard" />,
+        },
+      ]
     },
     {
       path: '*',

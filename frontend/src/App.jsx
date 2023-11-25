@@ -6,14 +6,6 @@ import PublicRouter from '@/Router/AppRouter';
 
 const App = () => {
 
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 100);
-    }, []);
-
     return (
         <div>
             <BrowserRouter>

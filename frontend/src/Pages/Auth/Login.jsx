@@ -45,7 +45,7 @@ const LoginPage = () => {
     AuthService.login(values)
       .then(response => {
         dispatch({ type: "Auth/setToken", payload: response.data.access_token });
-        navigate("/", { replace: true });
+        navigate("/dashboard", { replace: true });
       })
       .catch((error) => {
         console.error('Error during login:', error);

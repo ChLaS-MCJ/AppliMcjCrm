@@ -2,9 +2,7 @@ import React from 'react';
 
 const Clients = () => {
     return (
-        <div>
-            aaaaaaaaaaaaaa
-        </div>
+        <h2>Clients Page</h2>
     );
 };
 
