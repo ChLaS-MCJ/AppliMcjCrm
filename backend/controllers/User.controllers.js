@@ -2,7 +2,10 @@
 /*** Import des module nécessaires */
 const db = require('../db.config')
 const User = db.User
-
+const path = require('path');
+require('dotenv').config();
+const bcrypt = require('bcrypt');
+const fs = require('fs');
 /**********************************/
 /*** Routage de la ressource User */
 
@@ -34,17 +37,17 @@ exports.getUser = async (req, res) => {
         return res.json(400).json({ message: 'Missing Parameter' })
     }
 
-    try{
+    try {
         // Récupération de l'utilisateur et vérification
-        let user = await User.findOne({ where: { id: userId }, attributes: ['id','pseudo','email']})
+        let user = await User.findOne({ where: { id: userId }, attributes: ['id', 'pseudo', 'email'] })
         if (user === null) {
             return res.status(404).json({ message: 'This user does not exist !' })
         }
 
         return res.json({ data: user })
-    }catch(err){
+    } catch (err) {
         return res.status(500).json({ message: 'Database Error', error: err })
-    }    
+    }
 }
 
 /**
@@ -55,27 +58,43 @@ exports.getUser = async (req, res) => {
  * @returns {Object} - JSON response with success message or error message.
  */
 exports.updateUser = async (req, res) => {
-    let userId = parseInt(req.params.id)
+    let userId = parseInt(req.params.id);
 
-    // Vérification si le champ id est présent et cohérent
     if (!userId) {
-        return res.status(400).json({ message: 'Missing parameter' })
+        return res.status(400).json({ message: 'Missing parameter' });
     }
 
-    try{
-        // Recherche de l'utilisateur et vérification
-        let user = await User.findOne({ where: {id: userId}, raw: true})
-        if(user === null){
-            return res.status(404).json({ message: 'This user does not exist !'})
+    try {
+        let user = await User.findOne({ where: { id: userId }, raw: true });
+        if (user === null) {
+            return res.status(404).json({ message: 'This user does not exist!' });
         }
 
-        // Mise à jour de l'utilisateur
-        await User.update(req.body, { where: {id: userId}})
-        return res.json({ message: 'User Updated'})
-    }catch(err){
+        if (req.file) {
+            const imagePath = `${req.protocol}://${req.get("host")}/api/images/${req.file.filename
+                }`;
+            req.body.image = imagePath;
+
+            if (user.image) {
+                const pathInfo = path.parse(user.image);
+                const oldImagePath = "api/images/" + pathInfo.base;
+                fs.unlink(`${oldImagePath}`, async () => {
+                    await User.update(req.body, { where: { id: userId } })
+                });
+            }
+        }
+
+        if (req.body.password) {
+            const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUND);
+            req.body.password = await bcrypt.hash(req.body.password, saltRounds);
+        }
+
+        await User.update(req.body, { where: { id: userId } })
+        return res.json({ message: 'User Updated' })
+    } catch (err) {
         return res.status(500).json({ message: 'Database Error', error: err })
     }
-}
+};
 
 /**
  * Restores a user from the trash in the database based on the provided id parameter.
@@ -84,15 +103,15 @@ exports.updateUser = async (req, res) => {
  * @param {Object} res - The response object.
  * @returns {Object} - JSON response with success message or error message.
  */
-exports.untrashUser =  (req, res) => {
+exports.untrashUser = (req, res) => {
     let userId = parseInt(req.params.id)
 
     // Vérification si le champ id est présent et cohérent
     if (!userId) {
         return res.status(400).json({ message: 'Missing parameter' })
     }
-    
-    User.restore({ where: {id: userId}})
+
+    User.restore({ where: { id: userId } })
         .then(() => res.status(204).json({}))
         .catch(err => res.status(500).json({ message: 'Database Error', error: err }))
 }
@@ -113,7 +132,7 @@ exports.trashUser = (req, res) => {
     }
 
     // Suppression de l'utilisateur
-    User.destroy({ where: {id: userId}})
+    User.destroy({ where: { id: userId } })
         .then(() => res.status(204).json({}))
         .catch(err => res.status(500).json({ message: 'Database Error', error: err }))
 }
@@ -125,7 +144,7 @@ exports.trashUser = (req, res) => {
  * @param {Object} res - The response object.
  * @returns {Object} - JSON response with success message or error message.
  */
-exports.deleteUser =  (req, res) => {
+exports.deleteUser = (req, res) => {
     let userId = parseInt(req.params.id)
 
     // Vérification si le champ id est présent et cohérent
@@ -134,7 +153,7 @@ exports.deleteUser =  (req, res) => {
     }
 
     // Suppression de l'utilisateur
-    User.destroy({ where: {id: userId}, force: true})
+    User.destroy({ where: { id: userId }, force: true })
         .then(() => res.status(204).json({}))
         .catch(err => res.status(500).json({ message: 'Database Error', error: err }))
 }

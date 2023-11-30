@@ -46,12 +46,12 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Mise en place du routage
 app.get('/api/', (req, res) => res.send(`🚀 I'm online. All is OK ! ⭐️`));
 app.use('/api/users', GuardAuth, user_router);
 app.use('/api/auth', auth_router);
+app.use('/api/images', express.static(path.join(__dirname, 'Assets/Images')));
 
 // Gestionnaire d'erreurs en production
 if (app.get('env') === 'development') {

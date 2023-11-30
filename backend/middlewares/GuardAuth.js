@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 /**
  * Middleware function to check the presence and validity of a JWT token in the request headers.
  * @param {object} req - The request object containing the headers.
@@ -15,11 +17,13 @@ const checkTokenMiddleware = (req, res, next) => {
         const matches = authorization.match(/(bearer)\s+(\S+)/i);
         return matches && matches[2];
     }
-
     const token = req.headers.authorization && extractBearer(req.headers.authorization);
     if (!token) return res.status(401).json({ message: 'Token non présent!' });
     jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
-        if (err) return res.status(401).json({ message: 'Bad token' });
+        if (err) {
+            console.error('Error verifying JWT token:', err);
+            return res.status(401).json({ message: 'Bad token' });
+        }
         next();
     });
 }

@@ -7,9 +7,7 @@
 /*** Import necessary modules */
 const express = require('express');
 const userCtrl = require('../controllers/User.controllers');
-
-/***************************************/
-/*** Retrieve the express router */
+const GuardMulter = require('../middlewares/GuardMulter');
 const router = express.Router();
 
 /*********************************************/
@@ -24,7 +22,7 @@ router.use((req, res, next) => {
 /*** Routing for User resource */
 router.get('/', userCtrl.getAllUsers);
 router.get('/:id', userCtrl.getUser);
-router.patch('/:id', userCtrl.updateUser);
+router.patch('/:id', GuardMulter, userCtrl.updateUser);
 router.post('/untrash/:id', userCtrl.untrashUser);
 router.delete('/trash/:id', userCtrl.trashUser);
 router.delete('/:id', userCtrl.deleteUser);

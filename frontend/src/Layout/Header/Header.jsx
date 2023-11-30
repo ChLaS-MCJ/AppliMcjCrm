@@ -1,29 +1,38 @@
+// HeaderContent.jsx
+
 import { Link } from 'react-router-dom';
 import { Avatar, Dropdown, Layout } from 'antd';
 import { SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-export default function HeaderContent() {
+import { useEffect, useState } from 'react';
+import { AuthService } from '@/Services';
+import { UserOutlined } from '@ant-design/icons';
 
+export default function HeaderContent() {
+  const [ProfilUser, setProfilUser] = useState({});
+  const [initial, setinitial] = useState("");
   const { Header } = Layout;
 
-  const srcImgProfile = null;
+  useEffect(() => {
+    const tokenInfo = AuthService.getTokenInfo();
+    setProfilUser(tokenInfo);
+    setinitial(tokenInfo.nom.charAt(0) + tokenInfo.prenom.charAt(0))
+  }, []);
 
   const ProfileDropdown = () => {
     const navigate = useNavigate();
     return (
-      <div className="profileDropdown" onClick={() => navigate('/profile')}>
+      <div className="profileDropdown" onClick={() => navigate('/profil')}>
         <Avatar
           size="large"
           className="last"
-          src={srcImgProfile}
+          src={ProfilUser.image}
+          icon={<UserOutlined />}
           style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
-        >
-        </Avatar>
+        ></Avatar>
         <div className="profileDropdownInfo">
-          <p>
-            chalas maxime
-          </p>
-          <p>mcj.dev@gmail.com</p>
+          <p>{ProfilUser.nom + " " + ProfilUser.prenom}</p>
+          <p>{ProfilUser.email}</p>
         </div>
       </div>
     );
@@ -45,8 +54,8 @@ export default function HeaderContent() {
       icon: <SettingOutlined />,
       key: 'settingProfile',
       label: (
-        <Link to={'/profile'}>
-          <DropdownMenu text={"profile_settings"} />
+        <Link to={'/profil'}>
+          <DropdownMenu text={'Modification profil'} />
         </Link>
       ),
     },
@@ -59,15 +68,16 @@ export default function HeaderContent() {
       label: <Link to={'/logout'}>Déconnexion</Link>,
     },
   ];
+
   return (
     <Header
       style={{
         padding: '20px',
         background: '#f9fafc',
-        display: ' flex',
-        flexDirection: ' row-reverse',
-        justifyContent: ' flex-start',
-        gap: ' 15px',
+        display: 'flex',
+        flexDirection: 'row-reverse',
+        justifyContent: 'flex-start',
+        gap: '15px',
       }}
     >
       <Dropdown
@@ -78,22 +88,32 @@ export default function HeaderContent() {
         placement="bottomRight"
         stye={{ width: '280px', float: 'right' }}
       >
-        {/* <Badge dot> */}
-        <Avatar
-          className="last"
-          src={srcImgProfile}
-          style={{
-            color: '#f56a00',
-            backgroundColor: '#fde3cf',
-            float: 'right',
-          }}
-          size="large"
-        >
-          CHALAS
-        </Avatar>
-        {/* </Badge> */}
+        {ProfilUser.image ? (
+          <Avatar
+            className="last"
+            src={ProfilUser.image}
+            style={{
+              color: '#f56a00',
+              backgroundColor: '#fde3cf',
+              float: 'right',
+            }}
+            size="large"
+          />
+        ) : (
+          <Avatar
+            className="last"
+            style={{
+              color: '#f56a00',
+              backgroundColor: '#fde3cf',
+              float: 'right',
+            }}
+            size="large"
+          >
+            {initial}
+          </Avatar>
+        )}
       </Dropdown>
-
     </Header>
   );
 }
+

@@ -1,0 +1,31 @@
+.btnmodif {
+    position: absolute;
+    right: 40px;
+    bottom: 70px;
+}
+
+
+.ant-drawer-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#updateprofil>span {
+    position: absolute;
+    top: 25px;
+    left: 44%;
+}
+
+.titleUpdateprofil {
+    text-align: center;
+}
+
+@media (max-width: 490px) {
+    .btnmodif {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+    }
+
+}

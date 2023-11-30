@@ -51,7 +51,14 @@ const generateAccessToken = (user) => {
       id: user.id,
       nom: user.nom,
       prenom: user.prenom,
+      pseudo: user.pseudo,
       email: user.email,
+      image: user.image,
+      role: user.RoleId,
+      adresse: user.adresse,
+      phone: user.phone,
+      genre: user.genre,
+      description: user.description,
     },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_DURING }
@@ -139,27 +146,27 @@ exports.register = async (req, res) => {
  * @param {object} res - The response object.
  * @returns {object} - The new access token is returned as the response body.
  */
-  exports.refreshToken = async (req, res) => {
-    try {
-      const { refresh_token: refreshToken } = req.body;
-  
-      jwt.verify(refreshToken, process.env.JWT_SECRET_REFRESH);
-  
-      const user = await User.findOne({ where: { refreshToken } });
-  
-      if (!user) {
-        return res.status(401).json({ message: 'Invalid refresh token' });
-      }
-  
-      const newAccessToken = generateAccessToken(user);
-  
-      return res.json({ access_token: newAccessToken });
-    } catch (error) {
-      console.error('Error refreshing token:', error);
-      return res.status(500).json({ message: 'Internal Server Error' });
+exports.refreshToken = async (req, res) => {
+  try {
+    const { refresh_token: refreshToken } = req.body;
+
+    jwt.verify(refreshToken, process.env.JWT_SECRET_REFRESH);
+
+    const user = await User.findOne({ where: { refreshToken } });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid refresh token' });
     }
-  };
-  
+
+    const newAccessToken = generateAccessToken(user);
+
+    return res.json({ access_token: newAccessToken });
+  } catch (error) {
+    console.error('Error refreshing token:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
 /**
  * Handles the request to reset a user's password.
  * 

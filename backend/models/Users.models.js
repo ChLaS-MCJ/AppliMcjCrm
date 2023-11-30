@@ -44,6 +44,26 @@ const userModel = (sequelize) => {
       type: DataTypes.STRING(64),
       is: /^[0-9a-f]{64}$/i,
     },
+    image: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
+    adresse: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
+    phone: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
+    description: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
+    genre: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
     refreshToken: {
       type: DataTypes.STRING,
     },
@@ -51,6 +71,7 @@ const userModel = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+
   }, { paranoid: true });
 
   /**

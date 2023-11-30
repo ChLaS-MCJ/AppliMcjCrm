@@ -5,7 +5,8 @@
  */
 
 import Axios from './Caller.service';
-import * as jwt_decode from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
+
 
 /**
  * Logs in the user with the provided credentials.
@@ -19,12 +20,8 @@ import * as jwt_decode from 'jwt-decode';
 const login = async (credentials) => {
   const response = await Axios.post('/auth/login', credentials);
 
-  if (credentials.remember) {
-    saveTokenToLocalStorage(response.data.access_token);
-  } else {
-    saveTokenToSessionStorage(response.data.access_token);
-  }
-  
+  saveTokenToLocalStorage(response.data.access_token);
+
   return response;
 };
 
@@ -59,21 +56,12 @@ const saveTokenToLocalStorage = (token) => {
 };
 
 /**
- * Saves the provided token to the session storage.
- *
- * @param {string} token - The authentication token.
- */
-const saveTokenToSessionStorage = (token) => {
-  sessionStorage.setItem('auth', token);
-};
-
-/**
  * Retrieves the decoded information from the authentication token.
  *
  * @returns {Object|null} - The decoded information from the authentication token, or null if the token is not found or invalid.
  */
 const getTokenInfo = () => {
-  return jwt_decode(getToken());
+  return jwtDecode(getToken());
 };
 
 /**
@@ -97,7 +85,6 @@ const resetPassword = async ({ password, resettoken }) => {
 export const AuthService = {
   login,
   saveTokenToLocalStorage,
-  saveTokenToSessionStorage,
   logout,
   isLogged,
   getToken,

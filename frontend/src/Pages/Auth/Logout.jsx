@@ -12,7 +12,6 @@ import PageLoader from '@/Components/PageLoader';
 const Logout = () => {
 
   const navigate = useNavigate();
-  console.log("je passe au logout")
   useEffect(() => {
 
     window.localStorage.removeItem('auth');

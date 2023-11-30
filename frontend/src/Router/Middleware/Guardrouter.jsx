@@ -1,8 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-import AuthService from "@/Services/Auth.service";
-
+import { AuthService } from '@/Services';
 /**
  * A React component that acts as a route guard. It checks if a route is private or public
  * and redirects the user accordingly based on their authentication status.

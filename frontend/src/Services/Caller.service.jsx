@@ -17,7 +17,7 @@
  */
 import axios from 'axios'
 import { API_BASE_URL } from '@/Config/ServerApiConfig';
-import { AuthService } from './Auth.service'
+import { AuthService } from '@/Services';
 
 // Configure Axios with base URL
 const Axios = axios.create({
@@ -33,21 +33,30 @@ Axios.interceptors.request.use(async (request) => {
     return request;
 });
 
-Axios.interceptors.response.use(
+axios.interceptors.response.use(
     (response) => response,
     async (error) => {
         if (error.response && error.response.status === 401) {
-            //Test la date du token +15min
             const refreshToken = await AuthService.getRefreshToken();
             if (refreshToken) {
                 try {
-                    const response = await AuthService.refreshToken(refreshToken);
-                    const newAccessToken = response.data.access_token;
 
-                    await AuthService.saveToken(newAccessToken);
+                    const currentToken = await AuthService.getToken();
+                    const decodedToken = AuthService.decodeToken(currentToken);
 
-                    error.config.headers.Authorization = `Bearer ${newAccessToken}`;
-                    return axios(error.config);
+                    const expirationDate = new Date(decodedToken.exp * 1000 + 15 * 60 * 1000);
+
+                    if (expirationDate > new Date()) {
+                        const response = await AuthService.refreshToken(refreshToken);
+                        const newAccessToken = response.data.access_token;
+                        await AuthService.saveToken(newAccessToken);
+                        error.config.headers.Authorization = `Bearer ${newAccessToken}`;
+                        return axios(error.config);
+                    } else {
+                        AuthService.logout();
+                        window.location = '/login';
+                        return Promise.reject(error);
+                    }
                 } catch (refreshError) {
                     console.error('Erreur lors du rafraîchissement du jeton:', refreshError);
                     AuthService.logout();
@@ -55,7 +64,6 @@ Axios.interceptors.response.use(
                     return Promise.reject(refreshError);
                 }
             } else {
-                // Si aucun refresh token n'est disponible, déconnectez l'utilisateur
                 AuthService.logout();
                 window.location = '/login';
                 return Promise.reject(error);
@@ -65,5 +73,6 @@ Axios.interceptors.response.use(
         }
     }
 );
+
 
 export default Axios

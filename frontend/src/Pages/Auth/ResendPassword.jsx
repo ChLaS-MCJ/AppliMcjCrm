@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { useEffect } from 'react';
-import { Form, Button, Layout, Col, Divider, Typography,message  } from 'antd';
+import { Form, Button, Layout, Col, Divider, Typography, message } from 'antd';
 import ResendPasswordForm from '@/Forms/ResendPasswordForm';
 import AuthLayout from '@/layout/AuthLayout';
 import SideContent from '@/layout/AuthLayout/SideContentLogin';
-import AuthService from "@/Services/Auth.service";
+import { AuthService } from '@/Services';
 import logomobile from '@/Assets/images/logo-mobile.png';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '@/Redux/Auth/Selector';
@@ -34,11 +34,11 @@ const ResendPassword = () => {
   return (
     <>
       <AuthLayout sideContent={<SideContent />}>
-        <Content style={{padding: '10px 20px',}}></Content>
-        <Content style={{padding: '140px 30px 30px',maxWidth: '440px',margin: '0 auto',}}>
+        <Content style={{ padding: '10px 20px', }}></Content>
+        <Content style={{ padding: '140px 30px 30px', maxWidth: '440px', margin: '0 auto', }}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 0 }} span={0}>
-            <img src={logomobile} alt="Logo" style={{ margin: '-70px auto 40px',display: 'block',}}/>
-            </Col>
+            <img src={logomobile} alt="Logo" style={{ margin: '-70px auto 40px', display: 'block', }} />
+          </Col>
           <Title level={1}>Renvoyer le mot de passe</Title>
           <Divider />
           <div className="site-layout-content">

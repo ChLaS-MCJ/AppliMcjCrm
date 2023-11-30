@@ -50,12 +50,9 @@ export default function LoginForm() {
         />
       </Form.Item>
       <Form.Item>
-        <Form.Item name="remember" valuePropName="checked" noStyle>
-          <Checkbox>Souviens-toi de moi</Checkbox>
-        </Form.Item>
 
         <a className="login-form-forgot" href="/resendpassword">
-        Mot de passe oublié
+          Mot de passe oublié
         </a>
       </Form.Item>
     </>

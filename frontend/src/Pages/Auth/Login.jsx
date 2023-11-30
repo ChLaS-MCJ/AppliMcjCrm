@@ -8,7 +8,6 @@
  * )
  */
 import React from 'react';
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Layout, Col, Divider, Typography } from 'antd';
 import LoginForm from '@/Forms/LoginForm';
@@ -16,7 +15,7 @@ import AuthLayout from '@/layout/AuthLayout';
 import SideContent from '@/layout/AuthLayout/SideContentLogin';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuth } from '@/Redux/Auth/Selector';
-import AuthService from "@/Services/Auth.service";
+import { AuthService } from '@/Services';
 import logomobile from '@/Assets/images/logo-mobile.png';
 
 const { Content } = Layout;

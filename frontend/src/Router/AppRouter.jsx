@@ -12,6 +12,7 @@ const Logout = lazy(() => import('@/Pages/Auth/Logout.jsx'));
 const MainLayout = lazy(() => import('@/Layout/MainLayout'));
 const Clients = lazy(() => import('@/Pages/Private/Clients'));
 const Dashboard = lazy(() => import('@/Pages/Private/Dashboard'));
+const Profil = lazy(() => import('@/Pages/Private/Profil'));
 const AppRouter = () => {
   const element = useRoutes([
     {
@@ -45,6 +46,10 @@ const AppRouter = () => {
         {
           path: 'clients',
           element: <Clients />
+        },
+        {
+          path: 'profil',
+          element: <Profil />
         },
         {
           path: '/',

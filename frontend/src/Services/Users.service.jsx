@@ -20,10 +20,21 @@ const registerUsers = async (credentials) => {
     }
 };
 
+const updateUserProfile = async (id, formData) => {
+    try {
+        const response = await Axios.patch(`/users/${id}`, formData);
+
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 
 export const UsersService = {
-  registerUsers,
-  
+    registerUsers,
+    updateUserProfile,
+
 };
 
 export default UsersService;
