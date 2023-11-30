@@ -18,10 +18,12 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import { authReducer } from "@/Redux/Auth/Reducer";
 import { sideBarReducer } from "@/Redux/SideBar/Reducer";
+import { userReducer } from "@/Redux/User/Reducer";
 
 export const store = configureStore({
     reducer: {
         Auth: authReducer.reducer,
         SideBar: sideBarReducer.reducer,
+        UserStore: userReducer.reducer,
     }
 });

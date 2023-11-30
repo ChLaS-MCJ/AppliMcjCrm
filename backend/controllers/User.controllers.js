@@ -39,7 +39,7 @@ exports.getUser = async (req, res) => {
 
     try {
         // Récupération de l'utilisateur et vérification
-        let user = await User.findOne({ where: { id: userId }, attributes: ['id', 'pseudo', 'email'] })
+        let user = await User.findOne({ where: { id: userId } })
         if (user === null) {
             return res.status(404).json({ message: 'This user does not exist !' })
         }
@@ -77,7 +77,7 @@ exports.updateUser = async (req, res) => {
 
             if (user.image) {
                 const pathInfo = path.parse(user.image);
-                const oldImagePath = "api/images/" + pathInfo.base;
+                const oldImagePath = "Assets/Images/" + pathInfo.base;
                 fs.unlink(`${oldImagePath}`, async () => {
                     await User.update(req.body, { where: { id: userId } })
                 });
@@ -90,7 +90,9 @@ exports.updateUser = async (req, res) => {
         }
 
         await User.update(req.body, { where: { id: userId } })
-        return res.json({ message: 'User Updated' })
+
+        let userInfo = await User.findOne({ where: { id: userId } })
+        return res.json({ message: 'User Updated', user: userInfo })
     } catch (err) {
         return res.status(500).json({ message: 'Database Error', error: err })
     }

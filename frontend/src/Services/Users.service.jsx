@@ -30,10 +30,19 @@ const updateUserProfile = async (id, formData) => {
     }
 };
 
+const getUserProfile = async (id) => {
+    try {
+        const response = await Axios.get(`/users/${id}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
 export const UsersService = {
     registerUsers,
     updateUserProfile,
+    getUserProfile
 
 };
 

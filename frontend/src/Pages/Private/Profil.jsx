@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, Divider, Drawer, Card, Button } from 'antd';
 import { DoubleLeftOutlined, UserOutlined, DoubleRightOutlined } from '@ant-design/icons';
-import { AuthService } from '@/Services';
-import profilUser from "@/Assets/Images/MOI.jpg";
+
 import UpdateProfil from '@/Forms/UpdateProfil';
-const Profil = ({ }) => {
-
+import { useSelector } from 'react-redux';
+/**
+ * Component for rendering the user profile.
+ * @returns {JSX.Element} - The Profil component.
+ */
+const Profil = () => {
     const [open, setOpen] = useState(false);
-    const [ProfilUser, setProfilUser] = useState({});
-    console.log(ProfilUser)
-    useEffect(() => {
-        const tokenInfo = AuthService.getTokenInfo();
-        setProfilUser(tokenInfo);
-    }, []);
 
+    const StoreUser = useSelector(state => state.UserStore);
+
+    /**
+     * Handles opening the drawer.
+     */
     const showDrawer = () => {
         setOpen(true);
     };
 
+    /**
+     * Handles closing the drawer.
+     */
     const onClose = () => {
         setOpen(false);
     };
@@ -27,11 +32,11 @@ const Profil = ({ }) => {
             <Card className="upper-container" style={{ width: '100%' }}>
                 <div className="center-container">
                     <div className="image-container">
-                        {ProfilUser.image ? (
+                        {StoreUser ? (
                             <Avatar
                                 size={130}
                                 className="last"
-                                src={ProfilUser.image}
+                                src={StoreUser.image}
                                 icon={<UserOutlined />}
                                 style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
                             ></Avatar>
@@ -64,4 +69,5 @@ const Profil = ({ }) => {
         </>
     );
 };
+
 export default Profil;

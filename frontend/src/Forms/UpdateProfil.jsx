@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Input, Select, Checkbox, Divider, Typography, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { UsersService } from '@/Services';
-import { AuthService } from '@/Services';
+import { useDispatch, useSelector } from 'react-redux';
+import { userReducer } from '@/Redux/User/Reducer';
 
 const { Title } = Typography;
 const { Option } = Select;
+
 
 const formItemLayout = {
     labelCol: {
@@ -36,42 +38,47 @@ const passwordFormItemLayout = {
     },
 };
 
-export default function UpdateProfil() {
+/**
+ * Composant de mise à jour du profil utilisateur.
+ * Permet à l'utilisateur de modifier ses informations personnelles.
+ */
+const UpdateProfil = () => {
     const [form] = Form.useForm();
     const [changePassword, setChangePassword] = useState(false);
-    const [ProfilUser, setProfilUser] = useState({});
     const [file, setFile] = useState(null);
 
-    useEffect(() => {
-        const tokenInfo = AuthService.getTokenInfo();
-        setProfilUser(tokenInfo);
-    }, []);
+    // Utilisez une convention camelCase pour les variables
+    const storeUser = useSelector(state => state.UserStore);
+    const dispatch = useDispatch();
 
+    /**
+     * Gère la soumission du formulaire de mise à jour du profil.
+     * @param {Object} values - Les valeurs du formulaire.
+     */
     const onFinish = async (values) => {
         try {
             const validatedValues = await form.validateFields();
 
             const formData = new FormData();
-            formData.append('id', ProfilUser.id);
+            formData.append('id', storeUser.id);
             formData.append('email', validatedValues.email);
             if (changePassword) {
                 formData.append('password', validatedValues.password);
             }
             formData.append('pseudo', validatedValues.pseudo);
-            formData.append('adresse', validatedValues.Adresse);
-            formData.append('phone', validatedValues.prefix + validatedValues.phone);
+            formData.append('adresse', validatedValues.adresse);
+            formData.append('phone', validatedValues.phone);
             formData.append('description', validatedValues.intro);
             formData.append('genre', validatedValues.gender);
 
             if (file) {
                 formData.append('image', file);
             }
-            const response = await UsersService.updateUserProfile(ProfilUser.id, formData);
+            const response = await UsersService.updateUserProfile(storeUser.id, formData);
 
             if (response.message) {
-                message.success('Profil mis à jour avec succès !');
-
-
+                message.success('Profil mis à jour avec succès!');
+                dispatch(userReducer.actions.setUserData(response.user));
             } else {
                 message.error('Erreur lors de la mise à jour du profil : ' + response.message);
             }
@@ -80,26 +87,29 @@ export default function UpdateProfil() {
         }
     };
 
-
+    /**
+     * Gère l'échec de la soumission du formulaire.
+     * @param {Object} errorInfo - Informations sur l'erreur.
+     */
     const onFinishFailed = (errorInfo) => {
         message.open({
             type: 'error',
             content: 'Échec de la validation du formulaire',
         });
     };
-    const prefixSelector = (
-        <Form.Item name="prefix" noStyle>
-            <Select style={{ width: 70 }}>
-                <Option value="07">+07</Option>
-                <Option value="06">+06</Option>
-            </Select>
-        </Form.Item>
-    );
 
+    /**
+     * Bascule l'état du changement de mot de passe.
+     */
     const toggleChangePassword = () => {
         setChangePassword(!changePassword);
     };
 
+    /**
+     * Normalise le fichier téléchargé.
+     * @param {Object} e - Événement de changement de fichier.
+     * @returns {Array|File} - Liste des fichiers ou fichier unique.
+     */
     const normFile = (e) => {
         if (Array.isArray(e)) {
             return e;
@@ -107,6 +117,11 @@ export default function UpdateProfil() {
         return e?.fileList;
     };
 
+    /**
+     * Exécuté avant le téléchargement d'un fichier.
+     * @param {File} file - Fichier à télécharger.
+     * @returns {boolean} - Indique si le téléchargement doit avoir lieu.
+     */
     const beforeUpload = (file) => {
         setFile(file);
         return false;
@@ -121,6 +136,14 @@ export default function UpdateProfil() {
             onFinishFailed={onFinishFailed}
             style={{
                 maxWidth: 600,
+            }}
+            initialValues={{
+                email: storeUser.email,
+                pseudo: storeUser.pseudo,
+                Adresse: storeUser.adresse,
+                phone: storeUser.phone,
+                intro: storeUser.description,
+                gender: storeUser.genre,
             }}
         >
             <Title className="titleUpdateprofil" level={3}>Modification profil</Title>
@@ -234,7 +257,6 @@ export default function UpdateProfil() {
                 ]}
             >
                 <Input
-                    addonBefore={prefixSelector}
                     style={{
                         width: '100%',
                     }}
@@ -264,7 +286,7 @@ export default function UpdateProfil() {
                     },
                 ]}
             >
-                <Select placeholder="sélectionnez votre genre">
+                <Select placeholder="Sélectionnez votre genre">
                     <Option value="Homme">Homme</Option>
                     <Option value="Femme">Femme</Option>
                     <Option value="Autre">Autre</Option>
@@ -294,3 +316,5 @@ export default function UpdateProfil() {
         </Form>
     );
 }
+
+export default UpdateProfil;

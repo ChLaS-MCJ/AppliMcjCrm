@@ -1,24 +1,47 @@
-// HeaderContent.jsx
-
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Avatar, Dropdown, Layout } from 'antd';
+import { Avatar, Dropdown, Layout, Divider } from 'antd';
 import { SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { AuthService } from '@/Services';
+import { AuthService, UsersService } from '@/Services';
 import { UserOutlined } from '@ant-design/icons';
+import { userReducer } from '@/Redux/User/Reducer'; // Assurez-vous d'avoir le bon chemin
+import { useDispatch, useSelector } from 'react-redux';
 
-export default function HeaderContent() {
-  const [ProfilUser, setProfilUser] = useState({});
-  const [initial, setinitial] = useState("");
+
+/**
+ * Component for rendering the header content including user profile information.
+ * @returns {JSX.Element} - The HeaderContent component.
+ */
+const HeaderContent = () => {
+
   const { Header } = Layout;
+  const dispatch = useDispatch();
 
+  const StoreUser = useSelector(state => state.UserStore);
+
+  /**
+   * Fetches the user profile information on component mount.
+   */
   useEffect(() => {
     const tokenInfo = AuthService.getTokenInfo();
-    setProfilUser(tokenInfo);
-    setinitial(tokenInfo.nom.charAt(0) + tokenInfo.prenom.charAt(0))
-  }, []);
 
+    const getInfoProfile = async () => {
+      try {
+        const response = await UsersService.getUserProfile(tokenInfo.id);
+
+        dispatch(userReducer.actions.setUserData(response.data));
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+
+    getInfoProfile();
+  }, []);
+  /**
+   * Component for rendering the user profile dropdown.
+   * @returns {JSX.Element} - The ProfileDropdown component.
+   */
   const ProfileDropdown = () => {
     const navigate = useNavigate();
     return (
@@ -26,18 +49,24 @@ export default function HeaderContent() {
         <Avatar
           size="large"
           className="last"
-          src={ProfilUser.image}
+          src={StoreUser?.image}
           icon={<UserOutlined />}
           style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
         ></Avatar>
         <div className="profileDropdownInfo">
-          <p>{ProfilUser.nom + " " + ProfilUser.prenom}</p>
-          <p>{ProfilUser.email}</p>
+          <p>{`${StoreUser?.nom} ${StoreUser?.prenom}`}</p>
+          <p>{StoreUser?.email}</p>
         </div>
       </div>
     );
   };
 
+  /**
+   * Component for rendering a menu item in the dropdown.
+   * @param {Object} props - The component props.
+   * @param {string} props.text - The text to display.
+   * @returns {JSX.Element} - The DropdownMenu component.
+   */
   const DropdownMenu = ({ text }) => {
     return <span style={{}}>{text}</span>;
   };
@@ -80,40 +109,30 @@ export default function HeaderContent() {
         gap: '15px',
       }}
     >
+
       <Dropdown
         menu={{
           items,
         }}
         trigger={['click']}
         placement="bottomRight"
-        stye={{ width: '280px', float: 'right' }}
+        style={{ width: '280px', float: 'right' }}
       >
-        {ProfilUser.image ? (
-          <Avatar
-            className="last"
-            src={ProfilUser.image}
-            style={{
-              color: '#f56a00',
-              backgroundColor: '#fde3cf',
-              float: 'right',
-            }}
-            size="large"
-          />
-        ) : (
-          <Avatar
-            className="last"
-            style={{
-              color: '#f56a00',
-              backgroundColor: '#fde3cf',
-              float: 'right',
-            }}
-            size="large"
-          >
-            {initial}
-          </Avatar>
-        )}
+        <Avatar
+          className="last"
+          src={StoreUser?.image ? StoreUser?.image : <UserOutlined />}
+          style={{
+            color: '#f56a00',
+            backgroundColor: '#fde3cf',
+            float: 'right',
+          }}
+          size={50}
+        />
+
       </Dropdown>
+      <Divider type="vertical" />
     </Header>
   );
-}
+};
 
+export default HeaderContent;
