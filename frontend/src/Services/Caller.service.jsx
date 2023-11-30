@@ -33,23 +33,23 @@ Axios.interceptors.request.use(async (request) => {
     return request;
 });
 
-axios.interceptors.response.use(
+Axios.interceptors.response.use(
     (response) => response,
     async (error) => {
         if (error.response && error.response.status === 401) {
             const refreshToken = await AuthService.getRefreshToken();
             if (refreshToken) {
                 try {
-
-                    const currentToken = await AuthService.getToken();
-                    const decodedToken = AuthService.decodeToken(currentToken);
+                    const decodedToken = AuthService.getTokenInfo();
 
                     const expirationDate = new Date(decodedToken.exp * 1000 + 15 * 60 * 1000);
 
                     if (expirationDate > new Date()) {
+
                         const response = await AuthService.refreshToken(refreshToken);
-                        const newAccessToken = response.data.access_token;
-                        await AuthService.saveToken(newAccessToken);
+
+                        const newAccessToken = response;
+                        await AuthService.saveRegenerateTokenToLocalStorage(newAccessToken);
                         error.config.headers.Authorization = `Bearer ${newAccessToken}`;
                         return axios(error.config);
                     } else {
@@ -58,7 +58,6 @@ axios.interceptors.response.use(
                         return Promise.reject(error);
                     }
                 } catch (refreshError) {
-                    console.error('Erreur lors du rafraîchissement du jeton:', refreshError);
                     AuthService.logout();
                     window.location = '/login';
                     return Promise.reject(refreshError);

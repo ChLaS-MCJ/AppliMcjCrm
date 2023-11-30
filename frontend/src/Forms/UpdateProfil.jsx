@@ -140,7 +140,7 @@ const UpdateProfil = () => {
             initialValues={{
                 email: storeUser.email,
                 pseudo: storeUser.pseudo,
-                Adresse: storeUser.adresse,
+                adresse: storeUser.adresse,
                 phone: storeUser.phone,
                 intro: storeUser.description,
                 gender: storeUser.genre,
@@ -234,7 +234,7 @@ const UpdateProfil = () => {
             </Form.Item>
 
             <Form.Item
-                name="Adresse"
+                name="adresse"
                 label="Adresse"
                 rules={[
                     {

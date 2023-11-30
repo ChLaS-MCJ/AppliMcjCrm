@@ -7,7 +7,6 @@
 import Axios from './Caller.service';
 import { jwtDecode } from "jwt-decode";
 
-
 /**
  * Logs in the user with the provided credentials.
  *
@@ -21,7 +20,7 @@ const login = async (credentials) => {
   const response = await Axios.post('/auth/login', credentials);
 
   saveTokenToLocalStorage(response.data.access_token);
-
+  saveRefreshTokenToLocalStorage(response.data.refresh_token);
   return response;
 };
 
@@ -55,6 +54,14 @@ const saveTokenToLocalStorage = (token) => {
   localStorage.setItem('auth', token);
 };
 
+const saveRegenerateTokenToLocalStorage = (token) => {
+  localStorage.setItem('auth', token);
+
+};
+
+const saveRefreshTokenToLocalStorage = (RefreshToken) => {
+  localStorage.setItem('refreshToken', RefreshToken);
+};
 /**
  * Retrieves the decoded information from the authentication token.
  *
@@ -76,21 +83,31 @@ const requestPasswordReset = async ({ email }) => {
 };
 
 const resetPassword = async ({ password, resettoken }) => {
-  console.log(resettoken)
   await Axios.post('/auth/reset-password', { password, resettoken });
 };
 
+const getRefreshToken = async () => {
+  return localStorage.getItem("refreshToken");
+};
 
+const refreshToken = async (refreshToken) => {
+  const response = await Axios.post('/auth/refresh', { refresh_token: refreshToken });
+  return response.data.access_token;
+};
 
 export const AuthService = {
   login,
   saveTokenToLocalStorage,
+  saveRefreshTokenToLocalStorage,
+  saveRegenerateTokenToLocalStorage,
   logout,
   isLogged,
   getToken,
   getTokenInfo,
   requestPasswordReset,
   resetPassword,
+  getRefreshToken,
+  refreshToken
 };
 
 export default AuthService;

@@ -150,15 +150,16 @@ exports.refreshToken = async (req, res) => {
   try {
     const { refresh_token: refreshToken } = req.body;
 
-    jwt.verify(refreshToken, process.env.JWT_SECRET_REFRESH);
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET_REFRESH);
 
-    const user = await User.findOne({ where: { refreshToken } });
+    const user = await User.findOne({ where: { id: decoded.userId } });
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid refresh token' });
     }
 
     const newAccessToken = generateAccessToken(user);
+    await User.update({ refreshToken: null }, { where: { id: decoded.userId } });
 
     return res.json({ access_token: newAccessToken });
   } catch (error) {
