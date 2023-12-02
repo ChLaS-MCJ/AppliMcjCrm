@@ -48,9 +48,10 @@ Axios.interceptors.response.use(
 
                         const response = await AuthService.refreshToken(refreshToken);
 
-                        const newAccessToken = response;
-                        await AuthService.saveRegenerateTokenToLocalStorage(newAccessToken);
-                        error.config.headers.Authorization = `Bearer ${newAccessToken}`;
+                        await AuthService.saveTokenToLocalStorage(response);
+                        localStorage.removeItem('refreshToken');
+                        error.config.headers.Authorization = `Bearer ${response}`;
+
                         return axios(error.config);
                     } else {
                         AuthService.logout();
@@ -73,5 +74,4 @@ Axios.interceptors.response.use(
     }
 );
 
-
-export default Axios
+export default Axios;

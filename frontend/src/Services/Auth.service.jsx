@@ -54,13 +54,13 @@ const saveTokenToLocalStorage = (token) => {
   localStorage.setItem('auth', token);
 };
 
-const saveRegenerateTokenToLocalStorage = (token) => {
-  localStorage.setItem('auth', token);
-
-};
-
-const saveRefreshTokenToLocalStorage = (RefreshToken) => {
-  localStorage.setItem('refreshToken', RefreshToken);
+/**
+ * Saves the provided refresh token to the local storage.
+ *
+ * @param {string} refreshToken - The refresh token.
+ */
+const saveRefreshTokenToLocalStorage = (refreshToken) => {
+  localStorage.setItem('refreshToken', refreshToken);
 };
 /**
  * Retrieves the decoded information from the authentication token.
@@ -77,19 +77,42 @@ const getTokenInfo = () => {
 const logout = () => {
   localStorage.removeItem('auth');
 };
-
+/**
+ * Requests a password reset for the user associated with the provided email.
+ *
+ * @param {Object} params - The parameters for the password reset request.
+ * @param {string} params.email - The email address associated with the user.
+ */
 const requestPasswordReset = async ({ email }) => {
   await Axios.post('/auth/request-password-reset', { email });
 };
 
+/**
+ * Resets the user's password using the provided password and reset token.
+ *
+ * @param {Object} params - The parameters for the password reset.
+ * @param {string} params.password - The new password for the user.
+ * @param {string} params.resettoken - The reset token for the user.
+ */
 const resetPassword = async ({ password, resettoken }) => {
   await Axios.post('/auth/reset-password', { password, resettoken });
 };
 
-const getRefreshToken = async () => {
-  return localStorage.getItem("refreshToken");
+/**
+ * Retrieves the refresh token from the local storage.
+ *
+ * @returns {string|null} - The refresh token, or null if not found.
+ */
+const getRefreshToken = () => {
+  return localStorage.getItem('refreshToken');
 };
 
+/**
+ * Requests a new access token using the provided refresh token.
+ *
+ * @param {string} refreshToken - The refresh token to use for obtaining a new access token.
+ * @returns {Promise<string>} - The new access token.
+ */
 const refreshToken = async (refreshToken) => {
   const response = await Axios.post('/auth/refresh', { refresh_token: refreshToken });
   return response.data.access_token;
@@ -99,7 +122,6 @@ export const AuthService = {
   login,
   saveTokenToLocalStorage,
   saveRefreshTokenToLocalStorage,
-  saveRegenerateTokenToLocalStorage,
   logout,
   isLogged,
   getToken,
@@ -107,7 +129,7 @@ export const AuthService = {
   requestPasswordReset,
   resetPassword,
   getRefreshToken,
-  refreshToken
+  refreshToken,
 };
 
 export default AuthService;

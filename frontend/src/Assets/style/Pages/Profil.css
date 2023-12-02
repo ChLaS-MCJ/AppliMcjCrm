@@ -1,10 +1,3 @@
-.btnmodif {
-    position: absolute;
-    right: 40px;
-    bottom: 70px;
-}
-
-
 .ant-drawer-body {
     display: flex;
     justify-content: center;
@@ -21,11 +14,29 @@
     text-align: center;
 }
 
-@media (max-width: 490px) {
-    .btnmodif {
-        position: absolute;
-        right: 10px;
-        bottom: 10px;
-    }
+.containerUlprofil {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    margin-top: 30px;
+}
 
+.containerUlprofil li {
+    margin-bottom: 15px;
+    list-style: none;
+}
+
+.containerTopProfil {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.containerTopProfil span {
+    position: relative;
+    top: 5px;
+}
+
+.profildescription {
+    display: flex;
+    margin-top: 0;
 }

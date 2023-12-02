@@ -57,15 +57,12 @@ const userModel = (sequelize) => {
       allowNull: true,
     },
     description: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(1000),
       allowNull: true,
     },
     genre: {
       type: DataTypes.STRING(100),
       allowNull: true,
-    },
-    refreshToken: {
-      type: DataTypes.STRING,
     },
     resetToken: {
       type: DataTypes.STRING,
@@ -99,11 +96,25 @@ const userModel = (sequelize) => {
    * @param {number} userId - The ID of the user.
    * @returns {string} - The generated refresh token.
    */
-  User.generateRefreshToken = async (userId) => {
+  User.generateAccessTokenWithRefresh = async (user) => {
     const { JWT_SECRET_REFRESH, JWT_DURING_REFRESH } = process.env;
-    const refreshToken = jwt.sign({ userId }, JWT_SECRET_REFRESH, { expiresIn: JWT_DURING_REFRESH });
-    await User.update({ refreshToken }, { where: { id: userId } });
-    return refreshToken;
+    return jwt.sign(
+      {
+        id: user.id,
+        nom: user.nom,
+        prenom: user.prenom,
+        pseudo: user.pseudo,
+        email: user.email,
+        image: user.image,
+        role: user.RoleId,
+        adresse: user.adresse,
+        phone: user.phone,
+        genre: user.genre,
+        description: user.description,
+      },
+      JWT_SECRET_REFRESH,
+      { expiresIn: JWT_DURING_REFRESH }
+    );
   };
 
   return User;

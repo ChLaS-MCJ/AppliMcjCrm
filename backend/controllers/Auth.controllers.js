@@ -95,12 +95,9 @@ exports.login = async (req, res) => {
 
     let accessToken = generateAccessToken(user);
 
-    if (!user.refreshToken) {
-      const refreshToken = await User.generateRefreshToken(user.id);
-      return res.json({ access_token: accessToken, refresh_token: refreshToken });
-    }
+    const refreshToken = await User.generateAccessTokenWithRefresh(user);
 
-    return res.json({ access_token: accessToken, refresh_token: user.refreshToken });
+    return res.json({ access_token: accessToken, refresh_token: refreshToken });
   } catch (err) {
     console.error('Login process failed', err);
     res.status(500).json({ message: 'Login process failed', error: err });
@@ -149,18 +146,17 @@ exports.register = async (req, res) => {
 exports.refreshToken = async (req, res) => {
   try {
     const { refresh_token: refreshToken } = req.body;
+    const { JWT_SECRET_REFRESH } = process.env;
+    const decoded = jwt.verify(refreshToken, JWT_SECRET_REFRESH);
 
-    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET_REFRESH);
-
-    const user = await User.findOne({ where: { id: decoded.userId } });
+    const user = await User.findOne({ where: { id: decoded.id } });
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid refresh token' });
     }
 
-    const newAccessToken = generateAccessToken(user);
-    await User.update({ refreshToken: null }, { where: { id: decoded.userId } });
-
+    const newAccessToken = await User.generateAccessTokenWithRefresh(user);
+    console.log(newAccessToken)
     return res.json({ access_token: newAccessToken });
   } catch (error) {
     console.error('Error refreshing token:', error);
