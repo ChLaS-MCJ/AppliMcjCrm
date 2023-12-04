@@ -1,28 +1,27 @@
+// HeaderContent.jsx
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Avatar, Dropdown, Layout, Divider } from 'antd';
+import { Avatar, Dropdown, Layout, Divider, Switch } from 'antd';
 import { SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { AuthService, UsersService } from '@/Services';
 import { UserOutlined } from '@ant-design/icons';
-import { userReducer } from '@/Redux/User/Reducer'; // Assurez-vous d'avoir le bon chemin
+import { themeSlice } from '@/Redux/Themes/Reducer';
+import { userReducer } from '@/Redux/User/Reducer';
 import { useDispatch, useSelector } from 'react-redux';
-
-
-/**
- * Component for rendering the header content including user profile information.
- * @returns {JSX.Element} - The HeaderContent component.
- */
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 const HeaderContent = () => {
-
   const { Header } = Layout;
   const dispatch = useDispatch();
 
   const StoreUser = useSelector(state => state.UserStore);
+  const isDarkMode = useSelector(state => state.theme.isDarkMode);
 
-  /**
-   * Fetches the user profile information on component mount.
-   */
+  const toggleTheme = () => {
+    dispatch(themeSlice.actions.toggleTheme());
+  };
+
   useEffect(() => {
     const tokenInfo = AuthService.getTokenInfo();
 
@@ -38,12 +37,10 @@ const HeaderContent = () => {
 
     getInfoProfile();
   }, []);
-  /**
-   * Component for rendering the user profile dropdown.
-   * @returns {JSX.Element} - The ProfileDropdown component.
-   */
+
+  const navigate = useNavigate();
+
   const ProfileDropdown = () => {
-    const navigate = useNavigate();
     return (
       <div className="profileDropdown" onClick={() => navigate('/profil')}>
         <Avatar
@@ -61,12 +58,6 @@ const HeaderContent = () => {
     );
   };
 
-  /**
-   * Component for rendering a menu item in the dropdown.
-   * @param {Object} props - The component props.
-   * @param {string} props.text - The text to display.
-   * @returns {JSX.Element} - The DropdownMenu component.
-   */
   const DropdownMenu = ({ text }) => {
     return <span style={{}}>{text}</span>;
   };
@@ -92,6 +83,9 @@ const HeaderContent = () => {
       type: 'divider',
     },
     {
+      type: 'divider',
+    },
+    {
       icon: <LogoutOutlined />,
       key: 'logout',
       label: <Link to={'/logout'}>Déconnexion</Link>,
@@ -102,14 +96,15 @@ const HeaderContent = () => {
     <Header
       style={{
         padding: '20px',
-        background: '#f9fafc',
+        background: 'transparent',
         display: 'flex',
         flexDirection: 'row-reverse',
         justifyContent: 'flex-start',
+        alignItems: "center",
         gap: '15px',
+
       }}
     >
-
       <Dropdown
         menu={{
           items,
@@ -119,7 +114,7 @@ const HeaderContent = () => {
         style={{ width: '280px', float: 'right' }}
       >
         <Avatar
-          className="last"
+          className="last profileHead"
           src={StoreUser?.image ? StoreUser?.image : <UserOutlined />}
           style={{
             color: '#f56a00',
@@ -128,9 +123,17 @@ const HeaderContent = () => {
           }}
           size={50}
         />
-
       </Dropdown>
-      <Divider type="vertical" />
+      <Divider type="vertical" style={{
+        height: "100%"
+      }} />
+      <Switch
+        className='switchLightandDark'
+        checked={isDarkMode}
+        onChange={toggleTheme}
+        checkedChildren={<FontAwesomeIcon icon={faMoon} />}
+        unCheckedChildren={<FontAwesomeIcon icon={faSun} />}
+      />
     </Header>
   );
 };

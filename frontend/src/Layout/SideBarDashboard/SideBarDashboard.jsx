@@ -1,7 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Button, Drawer, Layout, Menu } from 'antd';
+import { Button, Drawer, Layout, Menu, theme } from 'antd';
+
+import { useCustomTheme } from '@/Utils/ThemeColor';
 
 import logoIcon from '@/Assets/images/JustLogo.png';
 import logoIconMobile from '@/Assets/images/logo-icon.png';
@@ -21,7 +23,7 @@ import {
 } from '@ant-design/icons';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { sideBarReducer } from '@/Redux/SideBar/Reducer'; // Assurez-vous d'avoir le bon chemin
+import { sideBarReducer } from '@/Redux/SideBar/Reducer';
 
 const { Sider } = Layout;
 
@@ -91,6 +93,7 @@ function SidebarContent({ items }) {
   );
 }
 function SidebarButton({ collapsed, onClick }) {
+  const { colorBgContainer, boxShadow } = useCustomTheme(useSelector(state => state.theme.isDarkMode));
   return (
     <Button
       type="text"
@@ -100,7 +103,7 @@ function SidebarButton({ collapsed, onClick }) {
         fontSize: '16px',
         width: '100%',
         position: 'absolute',
-        boxShadow: '0px 0px 20px 3px rgb(150, 190, 238, 0.15)',
+        boxShadow: boxShadow,
         borderRadius: '0',
         bottom: 0,
         height: 64,
@@ -109,6 +112,7 @@ function SidebarButton({ collapsed, onClick }) {
   );
 }
 function Sidebar({ collapsible, collapsed, onCollapse }) {
+  const { colorBgContainer, boxShadow } = useCustomTheme(useSelector(state => state.theme.isDarkMode));
   return (
     <Sider
       trigger={null}
@@ -124,9 +128,9 @@ function Sidebar({ collapsible, collapsed, onCollapse }) {
         top: collapsed ? '0' : '30px',
         bottom: collapsed ? '0' : '20px',
         borderRadius: '8px',
-        boxShadow: '0px 0px 20px 3px rgb(150, 190, 238, 0.15)',
+        boxShadow: boxShadow,
+        background: colorBgContainer
       }}
-      theme="light"
     >
       <Logo collapsed={collapsed} onClick={() => onCollapse(!collapsed)} />
       <SidebarContent items={items} />
@@ -151,11 +155,15 @@ function MobileSidebar({ visible, onClose }) {
 
 export default function Navigation() {
   const [mobileSidebarVisible, setMobileSidebarVisible] = useState(true);
+  const { colorBgContainer, boxShadow } = useCustomTheme(useSelector(state => state.theme.isDarkMode));
+
+
   let location = useLocation();
   const [currentPath, setCurrentPath] = useState(location.pathname);
 
   const dispatch = useDispatch();
   const collapsed = useSelector(state => state.SideBar.collapsed);
+
 
   useEffect(() => {
     if (location && currentPath !== location.pathname) setCurrentPath(location.pathname);
@@ -170,7 +178,7 @@ export default function Navigation() {
   return (
     <>
       <div className="sidebar-wraper">
-        <Sidebar collapsible={true} collapsed={collapsed} onCollapse={toggleSidebar} />
+        <Sidebar collapsible={true} collapsed={collapsed} onCollapse={toggleSidebar} style={{ background: colorBgContainer, boxShadow: boxShadow, }} />
       </div>
       <Button
         type="text"

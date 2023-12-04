@@ -11,6 +11,8 @@ const Profil = () => {
     const [open, setOpen] = useState(false);
     const StoreUser = useSelector(state => state.UserStore);
 
+    let isdark = useSelector(state => state.theme.isDarkMode)
+
     const showDrawer = () => {
         setOpen(true);
     };
@@ -51,13 +53,13 @@ const Profil = () => {
     const getRoleTagProps = () => {
         switch (StoreUser?.RoleId) {
             case 1:
-                return { color: 'blue', backgroundColor: 'cyan' };
+                return { color: 'blue', backgroundcolor: 'cyan' };
             case 2:
-                return { color: 'green', backgroundColor: 'lightgreen' };
+                return { color: 'green', backgroundcolor: 'lightgreen' };
             case 3:
-                return { color: 'red', backgroundColor: 'lightcoral' };
+                return { color: 'red', backgroundcolor: 'lightcoral' };
             case 4:
-                return { color: 'purple', backgroundColor: 'lavender' };
+                return { color: 'purple', backgroundcolor: 'lavender' };
             default:
                 return {};
         }
@@ -117,21 +119,21 @@ const Profil = () => {
         <>
             <Card className="upper-container" style={{ width: '100%' }}>
                 <div className="center-container">
-                    <div className="image-container">
+                    <div className="image-container" style={{ backgroundColor: isdark ? '#252525' : 'white', }}>
                         {StoreUser ? (
                             <Avatar
                                 size={130}
                                 className="last"
                                 src={StoreUser?.image}
                                 icon={<UserSwitchOutlined />}
-                                style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
+                                style={{ color: '#f56a00', backgroundcolor: '#fde3cf' }}
                             ></Avatar>
                         ) : (
-                            <Avatar size={120} icon={<UserSwitchOutlined />} style={{ backgroundColor: "#f56a00" }} />
+                            <Avatar size={120} icon={<UserSwitchOutlined />} style={{ backgroundcolor: "#f56a00" }} />
                         )}
                     </div>
                 </div>
-            </Card>
+            </Card >
             <Divider style={{ marginTop: "20px" }} />
 
             <div className='containerTopProfil'>

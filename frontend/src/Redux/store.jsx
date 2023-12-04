@@ -19,9 +19,11 @@ import { configureStore } from "@reduxjs/toolkit";
 import { authReducer } from "@/Redux/Auth/Reducer";
 import { sideBarReducer } from "@/Redux/SideBar/Reducer";
 import { userReducer } from "@/Redux/User/Reducer";
+import { themeSlice } from "@/Redux/Themes/Reducer";
 
 export const store = configureStore({
     reducer: {
+        theme: themeSlice.reducer,
         Auth: authReducer.reducer,
         SideBar: sideBarReducer.reducer,
         UserStore: userReducer.reducer,
