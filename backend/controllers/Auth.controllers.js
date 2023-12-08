@@ -192,6 +192,10 @@ exports.requestPasswordReset = async (req, res) => {
     await user.update({ resetToken });
 
     let transporter = nodemailer.createTransport({
+      secure: true,
+      requireTLS: true,
+      port: 465,
+      secured: true, 
       service: 'gmail',
       auth: {
         type: 'OAuth2',

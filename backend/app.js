@@ -33,14 +33,6 @@ app.use(cors({
   allowedHeaders: "Origin, X-Requested-With, x-access-token, role, Content, Accept, Content-Type, Authorization"
 }));
 
-app.use((req, res, next) => {
-  if (req.url.includes('/api')) {
-    cors()(req, res, next);
-  } else {
-    cors()(req, res, next);
-  }
-});
-
 // Config App
 app.use(helmet());
 app.use(cookieParser());

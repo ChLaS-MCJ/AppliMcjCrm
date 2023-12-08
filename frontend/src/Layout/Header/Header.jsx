@@ -11,6 +11,8 @@ import { userReducer } from '@/Redux/User/Reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
+import WeatherSwitch from '@/Components/Weather/Weather';
+
 const HeaderContent = () => {
   const { Header } = Layout;
   const dispatch = useDispatch();
@@ -134,6 +136,8 @@ const HeaderContent = () => {
         checkedChildren={<FontAwesomeIcon icon={faMoon} />}
         unCheckedChildren={<FontAwesomeIcon icon={faSun} />}
       />
+
+      <WeatherSwitch />
     </Header>
   );
 };

@@ -51,14 +51,14 @@ export default function MainLayout() {
           </div>
         </Content>
       </Layout>
-      <Footer style={{
+      {/* <Footer style={{
         position: contentHeight > '100vh' ? 'relative' : 'fixed',
         bottom: contentHeight > '100vh' ? 'auto' : 0,
         background: colorBgContainer,
         boxShadow: boxShadow,
       }}>
         Mcj-dev Crm ©2023
-      </Footer>
+      </Footer> */}
     </Layout>
   );
 }

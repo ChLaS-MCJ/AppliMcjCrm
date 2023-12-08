@@ -88,7 +88,7 @@ const userModel = (sequelize) => {
    * @returns {boolean} - True if the passwords match, false otherwise.
    */
   User.checkPassword = async (password, originel) => {
-    return await bcrypt.compare(password, originel);
+    return bcrypt.compare(password, originel);
   };
 
   /**
