@@ -13,6 +13,8 @@ const MainLayout = lazy(() => import('@/Layout/MainLayout'));
 const Clients = lazy(() => import('@/Pages/Private/Clients'));
 const Dashboard = lazy(() => import('@/Pages/Private/Dashboard'));
 const Profil = lazy(() => import('@/Pages/Private/Profil'));
+const ClientsDetails = lazy(() => import('@/Pages/Private/ClientsDetails'));
+const Company = lazy(() => import('@/Pages/Private/Company'));
 const AppRouter = () => {
   const element = useRoutes([
     {
@@ -45,11 +47,19 @@ const AppRouter = () => {
         },
         {
           path: 'clients',
-          element: <Clients />
+          element: <Clients />,
+        },
+        {
+          path: "clients/:clientId",
+          element: <ClientsDetails />
         },
         {
           path: 'profil',
           element: <Profil />
+        },
+        {
+          path: 'compagny',
+          element: <Company />,
         },
         {
           path: '/',

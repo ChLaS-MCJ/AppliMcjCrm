@@ -1,8 +1,8 @@
 import React from 'react';
-
+import DataTable from '@/Components/DataTableClients/DataTableClients';
 const Clients = () => {
     return (
-        <h2>Clients Page</h2>
+        <DataTable />
     );
 };
 

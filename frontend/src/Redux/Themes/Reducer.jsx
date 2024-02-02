@@ -7,5 +7,8 @@ export const themeSlice = createSlice({
         toggleTheme: (state) => {
             state.isDarkMode = !state.isDarkMode;
         },
+        resetTheme: (state) => {
+            state.isDarkMode = false;
+        },
     },
 });

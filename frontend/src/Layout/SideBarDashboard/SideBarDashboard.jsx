@@ -20,6 +20,7 @@ import {
   FileOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  IdcardOutlined,
 } from '@ant-design/icons';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,9 +30,9 @@ const { Sider } = Layout;
 
 const items = [
   {
-    key: 'dashboard',
+    key: 'Dashboard',
     icon: <DashboardOutlined />,
-    label: <Link to={'/dashboard'}>dashboard</Link>,
+    label: <Link to={'/dashboard'}>Dashboard</Link>,
   },
   {
     key: 'clients',
@@ -49,9 +50,9 @@ const items = [
     label: <Link to={'/customer'}>customer</Link>,
   },
   {
-    key: 'invoice',
-    icon: <FileTextOutlined />,
-    label: <Link to={'/invoice'}>invoice</Link>,
+    key: 'compagny',
+    icon: <IdcardOutlined />,
+    label: <Link to={'/compagny'}>Entreprises</Link>,
   },
   {
     key: 'quote',

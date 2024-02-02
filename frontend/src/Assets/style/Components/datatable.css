@@ -1,0 +1,45 @@
+/* Ajoutez ces styles à votre fichier CSS ou à votre composant React */
+
+.ant-table-thead>tr>th {
+    padding: 2px 5px !important;
+}
+
+.ant-table-cell {
+    padding: 2px 5px !important;
+}
+
+.DrawerClientContainer {
+    height: 100%;
+    width: 90%;
+    margin: auto;
+}
+
+.DrawerClientContainer nav {
+    padding-left: 0px !important;
+}
+
+
+.Boxdrawerheadercontainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dark-drawer {
+    color: #c3c3c3;
+}
+
+.light-drawer {
+    color: #000000;
+}
+
+.containerinfodrawer {
+    padding-left: 20px;
+}
+
+.containerinfodrawer svg {
+    margin-right: 8px;
+}
+
+.containerinfodrawer div {
+    margin-top: 8px;
+}
