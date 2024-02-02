@@ -18,6 +18,12 @@
     padding-left: 0px !important;
 }
 
+.DrawerClientContainer button {
+    margin-bottom: 10px;
+    position: absolute;
+    right: 16px;
+    top: 12px;
+}
 
 .Boxdrawerheadercontainer {
     display: flex;
@@ -42,4 +48,19 @@
 
 .containerinfodrawer div {
     margin-top: 8px;
+}
+
+.ContainerCompanyForm div {
+    margin-top: 0px;
+}
+
+.tablecompany {
+    position: relative;
+    top: 30px;
+}
+
+.btnAddcompany {
+    position: absolute;
+    top: 10px;
+    left: 25px;
 }

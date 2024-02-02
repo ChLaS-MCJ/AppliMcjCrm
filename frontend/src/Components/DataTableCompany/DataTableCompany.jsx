@@ -10,10 +10,13 @@ import {
   ShopOutlined,
   InfoCircleOutlined,
   BankOutlined,
+  EditOutlined,
+  AppstoreAddOutlined,
 } from '@ant-design/icons';
 
 import { useSelector } from 'react-redux';
-import FormUpdateCompany from '@/Forms/FormUpdateCompany';
+import FormUpdateCompany from '@/Forms/Company/FormUpdateCompany';
+import FormAddCompany from '@/Forms/Company/FormAddCompany';
 function getColumnSearchProps(dataIndex) {
   return {
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -59,6 +62,8 @@ const DataTableCompany = () => {
   const [showForm, setShowForm] = useState(false);
 
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [addCompanyDrawerVisible, setAddCompanyDrawerVisible] = useState(false);
+
   const [selectedRowData, setSelectedRowData] = useState(null);
 
   const isDarkMode = useSelector(state => state.theme.isDarkMode);
@@ -80,32 +85,9 @@ const DataTableCompany = () => {
   };
 
   const fetchData = () => {
-    setLoading(true);
+    setLoading(false);
 
-    fetch(`https://randomuser.me/api?${qs.stringify(getRandomUserParams(tableParams))}`)
-      .then((res) => res.json())
-      .then(({ results }) => {
-        const formattedData = results.map((user, index) => ({
-          key: index,
-          societeNom: "name",
-          societeTel: user.phone,
-          numSiret: user.login.uuid,
-          societeRue: user.location.street.name,
-          societePays: user.location.country,
-          societeVille: user.location.city,
-          societeCodePostal: user.location.postcode,
-        }));
 
-        setData(formattedData);
-        setLoading(false);
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination,
-            total: 50, // Remplacez cela par le total réel des données sur le serveur
-          },
-        });
-      });
   };
 
   useEffect(() => {
@@ -194,15 +176,21 @@ const DataTableCompany = () => {
       fixed: 'right',
       render: (_, record) => (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-          <a style={{ color: 'red' }} onClick={() => handleDetailsClick(record)}><MenuFoldOutlined /></a>
+          <a style={{ color: '#f4a54b' }} onClick={() => handleDetailsClick(record)}><MenuFoldOutlined /></a>
         </div>
       ),
     },
   ];
 
-  console.log(selectedRowData)
+  const handleToggleAddCompanyDrawer = () => {
+    setAddCompanyDrawerVisible(!addCompanyDrawerVisible);
+  };
   return (
     <div>
+      <Button type="dashed" className="btnAddcompany btn-orange" icon={<AppstoreAddOutlined />} onClick={handleToggleAddCompanyDrawer}>
+        Ajouter une entreprise
+      </Button>
+
       <Table
         columns={columns}
         dataSource={data}
@@ -212,6 +200,8 @@ const DataTableCompany = () => {
         bordered
         size="small"
         scroll={{ x: '100%', y: 430 }}
+        className="tablecompany"
+
       />
       <Drawer
         title="Détails"
@@ -223,8 +213,12 @@ const DataTableCompany = () => {
         className={isDarkMode ? 'dark-drawer' : 'light-drawer'}
       >
         {selectedRowData && (
-          <div className='DrawerClientContainer'>
 
+
+          <div className='DrawerClientContainer'>
+            <Button type="primary" icon={<EditOutlined />} onClick={handleToggleForm}>
+              Modifier l'entreprise
+            </Button>
             <h2>Identité de l'Entreprise</h2>
             <Space direction="vertical">
               <div className='containerinfodrawer'>
@@ -264,12 +258,10 @@ const DataTableCompany = () => {
                   <EnvironmentOutlined />
                   <strong>Code Postal :</strong> {selectedRowData.societeCodePostal}
                 </div>
-                <Button type="primary" onClick={handleToggleForm}>
-                  Modifier l'entreprise
-                </Button>
+
                 {showForm && (
-                  <div>
-                    <FormUpdateCompany />
+                  <div className='ContainerCompanyForm'>
+                    <FormUpdateCompany initialCompanyData={selectedRowData} />
                   </div>
                 )}
               </div>
@@ -278,6 +270,18 @@ const DataTableCompany = () => {
         )
         }
       </Drawer >
+
+      <Drawer
+        title="Ajouter une entreprise"
+        width={600}
+        placement="right"
+        closable={true}
+        onClose={() => setAddCompanyDrawerVisible(false)}
+        open={addCompanyDrawerVisible}
+        className={isDarkMode ? 'dark-drawer' : 'light-drawer'}
+      >
+        <FormAddCompany />
+      </Drawer>
     </div >
   );
 };

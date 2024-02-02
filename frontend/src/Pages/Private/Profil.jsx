@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Avatar, Drawer, Card, Button, Typography, Descriptions, Divider, Tag } from 'antd';
 import { DoubleLeftOutlined, DoubleRightOutlined, MailOutlined, EnvironmentOutlined, PhoneOutlined, UserSwitchOutlined, IdcardOutlined, EditOutlined } from '@ant-design/icons';
 
-import UpdateProfil from '@/Forms/UpdateProfil';
+import UpdateProfil from '@/Forms/Users/UpdateProfil';
 import { useSelector } from 'react-redux';
 
 const { Title } = Typography;

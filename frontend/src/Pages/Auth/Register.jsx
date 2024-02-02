@@ -5,7 +5,7 @@
  */
 import React, { useState } from 'react';
 import { Form, Button, Layout, Col, Divider, Typography, message } from 'antd';
-import RegisterForm from '@/Forms/RegisterForm';
+import RegisterForm from '@/Forms/Auth/RegisterForm';
 import AuthLayout from '@/layout/AuthLayout';
 import SideContent from '@/layout/AuthLayout/SideContentLogin';
 import UsersService from "@/Services/Users.service";

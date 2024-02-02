@@ -2,7 +2,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { Form, Button, Layout, Col, Divider, Typography, message } from 'antd';
-import ResetPasswordForm from '@/Forms/ResetPasswordForm';
+import ResetPasswordForm from '@/Forms/Auth/ResetPasswordForm';
 import AuthLayout from '@/layout/AuthLayout';
 import SideContent from '@/layout/AuthLayout/SideContentLogin';
 import { AuthService } from '@/Services';

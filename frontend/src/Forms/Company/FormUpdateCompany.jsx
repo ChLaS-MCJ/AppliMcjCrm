@@ -6,19 +6,19 @@ const { Title } = Typography;
 
 const formItemLayout = {
     labelCol: {
-        xs: { span: 8 },
-        sm: { span: 8 },
+        xs: { span: 10 },
+        sm: { span: 6 },
     },
     wrapperCol: {
-        xs: { span: 16 },
-        sm: { span: 16 },
+        xs: { span: 14 },
+        sm: { span: 14 },
     },
 };
 
 const tailFormItemLayout = {
     wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 16, offset: 8 },
+        xs: { span: 26, offset: 6 },
+        sm: { span: 4, offset: 14 },
     },
 };
 
@@ -26,9 +26,9 @@ const tailFormItemLayout = {
  * Composant de mise à jour des informations de l'entreprise.
  * Permet de modifier les informations de l'entreprise.
  */
-const FormUpdateCompany = () => {
+const FormUpdateCompany = (selectedRowData) => {
     const [form] = Form.useForm();
-
+    console.log(selectedRowData);
     /**
      * Gère la soumission du formulaire de mise à jour des informations de l'entreprise.
      * @param {Object} values - Les valeurs du formulaire.
@@ -80,25 +80,29 @@ const FormUpdateCompany = () => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flexStart',
                 maxWidth: 600,
             }}
 
             initialValues={{
-                nom: "Nom de l'entreprise",
-                telephone: "Numéro de téléphone de l'entreprise",
-                siret: "Numéro SIRET de l'entreprise",
-                rue: "Rue de l'entreprise",
-                pays: "Pays de l'entreprise",
-                ville: "Ville de l'entreprise",
-                codePostal: "Code postal de l'entreprise",
+                nom: selectedRowData.initialCompanyData.societeNom,
+                telephone: selectedRowData.initialCompanyData.societeTel,
+                siret: selectedRowData.initialCompanyData.numSiret,
+                Adresse: selectedRowData.initialCompanyData.societeRue,
+                pays: selectedRowData.initialCompanyData.societePays,
+                ville: selectedRowData.initialCompanyData.societeVille,
+                codePostal: selectedRowData.initialCompanyData.societeCodePostal,
             }}
         >
+            <Divider />
             <Title className="titleUpdateEntrepriseInfo" level={3}>Modification des informations de l'entreprise</Title>
             <Divider />
 
             <Form.Item
                 name="nom"
-                label="Nom de l'entreprise"
+                label="Nom"
                 rules={[
                     {
                         required: true,
@@ -106,95 +110,102 @@ const FormUpdateCompany = () => {
                         whitespace: true,
                     },
                 ]}
+                style={{ width: '100%' }}
             >
                 <Input />
             </Form.Item>
 
             <Form.Item
                 name="telephone"
-                label="Téléphone de l'entreprise"
+                label="Téléphone"
                 rules={[
                     {
                         required: true,
                         message: 'Veuillez entrer le numéro de téléphone de votre entreprise !',
                     },
                 ]}
+                style={{ width: '100%' }}
             >
                 <Input />
             </Form.Item>
 
             <Form.Item
                 name="siret"
-                label="Numéro SIRET de l'entreprise"
+                label="Numéro SIRET"
                 rules={[
                     {
                         required: true,
                         message: 'Veuillez entrer le numéro SIRET de votre entreprise !',
                     },
                 ]}
+                style={{ width: '100%' }}
             >
                 <Input />
             </Form.Item>
 
             <Form.Item
-                name="rue"
-                label="Rue de l'entreprise"
+                name="Adresse"
+                label="Adresse"
                 rules={[
                     {
                         required: true,
                         message: 'Veuillez entrer la rue de votre entreprise !',
                     },
                 ]}
+                style={{ width: '100%' }}
             >
                 <Input />
             </Form.Item>
 
             <Form.Item
                 name="pays"
-                label="Pays de l'entreprise"
+                label="Pays"
                 rules={[
                     {
                         required: true,
                         message: 'Veuillez entrer le pays de votre entreprise !',
                     },
                 ]}
+                style={{ width: '100%' }}
             >
                 <Input />
             </Form.Item>
 
             <Form.Item
                 name="ville"
-                label="Ville de l'entreprise"
+                label="Ville"
                 rules={[
                     {
                         required: true,
                         message: 'Veuillez entrer la ville de votre entreprise !',
                     },
                 ]}
+                style={{ width: '100%' }}
             >
                 <Input />
             </Form.Item>
 
             <Form.Item
                 name="codePostal"
-                label="Code postal de l'entreprise"
+                label="Code postal"
                 rules={[
                     {
                         required: true,
                         message: 'Veuillez entrer le code postal de votre entreprise !',
                     },
                 ]}
+                style={{ width: '100%' }}
             >
                 <Input />
             </Form.Item>
 
             <Form.Item {...tailFormItemLayout}>
                 <Button type="primary" htmlType="submit">
-                    Mettre à jour les informations de l'entreprise
+                    Mettre à jour l'entreprise
                 </Button>
             </Form.Item>
         </Form>
-    );
+    )
 };
 
 export default FormUpdateCompany;

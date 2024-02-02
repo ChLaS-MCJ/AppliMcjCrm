@@ -29,11 +29,6 @@ const userModel = (sequelize) => {
       allowNull: false,
       unique: true,
     },
-    RoleId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 1,
-    },
     email: {
       type: DataTypes.STRING,
       validate: {

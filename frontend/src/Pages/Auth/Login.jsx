@@ -10,7 +10,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Layout, Col, Divider, Typography } from 'antd';
-import LoginForm from '@/Forms/LoginForm';
+import LoginForm from '@/Forms/Auth/LoginForm';
 import AuthLayout from '@/layout/AuthLayout';
 import SideContent from '@/layout/AuthLayout/SideContentLogin';
 import { useDispatch, useSelector } from 'react-redux';
