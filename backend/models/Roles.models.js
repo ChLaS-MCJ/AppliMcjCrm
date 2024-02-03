@@ -10,7 +10,7 @@ const rolesModel = (sequelize) => {
   const { DataTypes } = require('sequelize');
 
   return sequelize.define('Role', {
-    name: {
+    name_roles: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
@@ -18,6 +18,5 @@ const rolesModel = (sequelize) => {
   }, { paranoid: true });
 
 };
-  
-  module.exports = rolesModel;
-  
+
+module.exports = rolesModel;

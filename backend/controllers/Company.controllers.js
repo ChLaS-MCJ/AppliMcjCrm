@@ -1,13 +1,14 @@
 const db = require('../db.config');
 const Company = db.Company;
-const CompanyAdresse = db.CompanyAdresse;
-const Pays = db.Pays;
 
+const CompanyAdresse = db.CompanyAdresse;
+const Country = db.Country;
+const Clients = db.Clients;
 
 exports.GetAllCompany = async (req, res) => {
     try {
         const companies = await Company.findAll({
-            include: [CompanyAdresse, CodeNaf, Pays, Clients],
+            include: [CompanyAdresse, Country, Clients],
         });
         return res.json({ data: companies });
     } catch (error) {
@@ -36,32 +37,28 @@ exports.GetOneCompany = async (req, res) => {
 
 exports.AddCompany = async (req, res) => {
     const companyData = req.body;
-    console.log(companyData);
-    try {
-        console.log("je passe la");
-        const newPays = await Pays.create({
-            pays_name: companyData.pays_name,
-        });
-        console.log(newPays);
 
+    try {
+        // Créez d'abord la société
         const newCompany = await Company.create({
             company_name: companyData.company_name,
             company_telephone: companyData.company_telephone,
             company_num_siret: companyData.company_num_siret,
             code_naf: companyData.code_naf,
-            company_adresse_id: newCompanyAdresse.id,
-            pays_id: newPays.id,
+            pays_id: companyData.pays_id,
         });
 
-        const newCompanyAdresse = await CompanyAdresse.create({
+        const companyId = newCompany.id;
+
+        CompanyAdresse.create({
             company_adresse: companyData.company_adresse,
             company_ville: companyData.company_ville,
             company_codepostal: companyData.company_codepostal,
-            company_id: newCompany.id,
+            company_id: companyId,
         });
-        console.log(newCompany);
-        console.log(newCompanyAdresse);
+
         return res.status(201).json({ message: 'Company added successfully', data: newCompany });
+
     } catch (error) {
         return res.status(500).json({ message: 'Database Error', error });
     }
@@ -70,6 +67,7 @@ exports.AddCompany = async (req, res) => {
 exports.UpdateCompany = async (req, res) => {
     const companyId = parseInt(req.params.id);
     const updatedData = req.body;
+    console.log(req.body.company_name);
 
     try {
         const company = await Company.findOne({ where: { id: companyId } });
@@ -80,11 +78,13 @@ exports.UpdateCompany = async (req, res) => {
 
         await company.update(updatedData);
 
-        return res.json({ message: 'Company updated successfully', data: company });
+        return res.json({ message: 'Company updated successfully', data: updatedCompany });
     } catch (error) {
         return res.status(500).json({ message: 'Database Error', error });
     }
 };
+
+
 
 exports.DeleteCompany = async (req, res) => {
     const companyId = parseInt(req.params.id);

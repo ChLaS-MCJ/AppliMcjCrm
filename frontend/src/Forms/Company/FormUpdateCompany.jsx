@@ -1,7 +1,8 @@
-import React from 'react';
-import { Button, Form, Input, Typography, Divider, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Form, Input, Typography, Divider, message, Select } from 'antd';
 
 import EntrepriseService from "@/Services/Company.service";
+import Countryservice from '@/Services/Country.service';
 const { Title } = Typography;
 
 const formItemLayout = {
@@ -28,37 +29,55 @@ const tailFormItemLayout = {
  */
 const FormUpdateCompany = (selectedRowData) => {
     const [form] = Form.useForm();
-    console.log(selectedRowData);
+    const [countries, setCountries] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const countriesData = await Countryservice.GetAllCountries();
+                setCountries(countriesData);
+
+            } catch (error) {
+                console.error('Error fetching countries:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
     /**
      * Gère la soumission du formulaire de mise à jour des informations de l'entreprise.
      * @param {Object} values - Les valeurs du formulaire.
      */
     const onFinish = async (values) => {
         try {
+
             const validatedValues = await form.validateFields();
-
             const formData = new FormData();
-            formData.append('nom', validatedValues.nom);
-            formData.append('telephone', validatedValues.telephone);
-            formData.append('siret', validatedValues.siret);
-            formData.append('rue', validatedValues.rue);
-            formData.append('pays', validatedValues.pays);
-            formData.append('ville', validatedValues.ville);
-            formData.append('codePostal', validatedValues.codePostal);
 
+            formData.append('id', selectedRowData.initialCompanyData.id);
+            formData.append('company_name', validatedValues.company_name);
+            formData.append('company_telephone', validatedValues.company_telephone);
+            formData.append('company_num_siret', validatedValues.company_num_siret);
+            formData.append('code_naf', validatedValues.code_naf);
+            formData.append('company_adresse', validatedValues.company_adresse);
+            formData.append('pays_id', validatedValues.pays_id);
+            formData.append('company_ville', validatedValues.company_ville);
+            formData.append('company_codepostal', validatedValues.company_codepostal);
 
-            const response = await EntrepriseService.UpdateCompany(formData);
+            const response = await EntrepriseService.UpdateCompany(selectedRowData.initialCompanyData.id, formData);
 
             if (response.message) {
                 message.success('Informations de l\'entreprise mises à jour avec succès!');
-
             } else {
                 message.error('Erreur lors de la mise à jour des informations de l\'entreprise : ' + response.message);
             }
         } catch (errorInfo) {
             console.log('Validation Failed:', errorInfo);
         }
-
     };
 
     /**
@@ -87,13 +106,14 @@ const FormUpdateCompany = (selectedRowData) => {
             }}
 
             initialValues={{
-                nom: selectedRowData.initialCompanyData.societeNom,
-                telephone: selectedRowData.initialCompanyData.societeTel,
-                siret: selectedRowData.initialCompanyData.numSiret,
-                Adresse: selectedRowData.initialCompanyData.societeRue,
-                pays: selectedRowData.initialCompanyData.societePays,
-                ville: selectedRowData.initialCompanyData.societeVille,
-                codePostal: selectedRowData.initialCompanyData.societeCodePostal,
+                company_name: selectedRowData.initialCompanyData.company_name,
+                company_telephone: selectedRowData.initialCompanyData.company_telephone,
+                company_num_siret: selectedRowData.initialCompanyData.company_num_siret,
+                code_naf: selectedRowData.initialCompanyData.code_naf,
+                company_adresse: selectedRowData.initialCompanyData.CompanyAdresses[0].company_adresse,
+                pays_id: selectedRowData.initialCompanyData.Country.id,
+                company_ville: selectedRowData.initialCompanyData.CompanyAdresses[0].company_ville,
+                company_codepostal: selectedRowData.initialCompanyData.CompanyAdresses[0].company_codepostal,
             }}
         >
             <Divider />
@@ -101,7 +121,7 @@ const FormUpdateCompany = (selectedRowData) => {
             <Divider />
 
             <Form.Item
-                name="nom"
+                name="company_name"
                 label="Nom"
                 rules={[
                     {
@@ -116,7 +136,7 @@ const FormUpdateCompany = (selectedRowData) => {
             </Form.Item>
 
             <Form.Item
-                name="telephone"
+                name="company_telephone"
                 label="Téléphone"
                 rules={[
                     {
@@ -130,7 +150,7 @@ const FormUpdateCompany = (selectedRowData) => {
             </Form.Item>
 
             <Form.Item
-                name="siret"
+                name="company_num_siret"
                 label="Numéro SIRET"
                 rules={[
                     {
@@ -142,9 +162,22 @@ const FormUpdateCompany = (selectedRowData) => {
             >
                 <Input />
             </Form.Item>
+            <Form.Item
+                name="code_naf"
+                label="CodeNaf"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Veuillez entrer le code naf de votre entreprise !',
+                    },
+                ]}
+                style={{ width: '100%' }}
+            >
+                <Input />
+            </Form.Item>
 
             <Form.Item
-                name="Adresse"
+                name="company_adresse"
                 label="Adresse"
                 rules={[
                     {
@@ -158,21 +191,37 @@ const FormUpdateCompany = (selectedRowData) => {
             </Form.Item>
 
             <Form.Item
-                name="pays"
+                name="pays_id"
                 label="Pays"
                 rules={[
                     {
                         required: true,
-                        message: 'Veuillez entrer le pays de votre entreprise !',
+                        message: 'Veuillez sélectionner le pays de votre entreprise !',
                     },
                 ]}
                 style={{ width: '100%' }}
             >
-                <Input />
+                {loading ? (
+                    <Input placeholder="Chargement des pays..." disabled />
+                ) : (
+                    <Select
+                        showSearch
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                    >
+                        {countries.data.map(country => (
+                            <Select.Option key={country.id} value={country.id}>
+                                {country.nom_fr_fr}
+                            </Select.Option>
+                        ))}
+                    </Select>
+                )}
             </Form.Item>
 
             <Form.Item
-                name="ville"
+                name="company_ville"
                 label="Ville"
                 rules={[
                     {
@@ -186,7 +235,7 @@ const FormUpdateCompany = (selectedRowData) => {
             </Form.Item>
 
             <Form.Item
-                name="codePostal"
+                name="company_codepostal"
                 label="Code postal"
                 rules={[
                     {

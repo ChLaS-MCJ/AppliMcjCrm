@@ -16,6 +16,11 @@ const companyModel = (sequelize) => {
     const { DataTypes } = require('sequelize');
 
     return sequelize.define('Company', {
+        id: {
+            type: DataTypes.INTEGER(10),
+            primaryKey: true,
+            autoIncrement: true
+        },
         company_name: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -33,6 +38,7 @@ const companyModel = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: true,
         },
+
     }, { paranoid: true });
 
 };

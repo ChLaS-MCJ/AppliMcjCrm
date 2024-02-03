@@ -6,8 +6,7 @@
 /***********************************/
 /*** Import necessary modules */
 const express = require('express')
-const companyController = require('../controllers/Company.controllers')
-/***************************************/
+const countryController = require('../controllers/Country.controllers');
 
 /*** Get the express router */
 let router = express.Router()
@@ -22,11 +21,8 @@ router.use((req, res, next) => {
 
 /***********************************/
 /*** Routing for Auth resource */
-router.get('/', companyController.GetAllCompany)
-router.get('/:id', companyController.GetOneCompany)
-router.post('/', companyController.AddCompany)
-router.patch('/:id', companyController.UpdateCompany)
-router.delete('/:id', companyController.DeleteCompany)
+router.get('/', countryController.getAllCountries)
+router.get('/:id', countryController.getOneCountry)
 
 
 module.exports = router

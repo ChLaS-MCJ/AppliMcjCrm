@@ -1,33 +1,35 @@
-// Clients.model.js
+// Pays.model.js
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    const Clients = sequelize.define('Clients', {
+    const Country = sequelize.define('Country', {
         id: {
-            type: DataTypes.INTEGER(10),
+            type: DataTypes.INTEGER,
             primaryKey: true,
-            autoIncrement: true
+            autoIncrement: true,
+            allowNull: false,
         },
-        clients_name: {
+        code: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        clients_prenom: {
+        alpha2: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        clients_civilite: {
-            type: DataTypes.STRING,
-        },
-        clients_tel: {
-            type: DataTypes.STRING,
-        },
-        clients_mail: {
+        alpha3: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
+        },
+        nom_en_gb: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        nom_fr_fr: {
+            type: DataTypes.STRING,
+            allowNull: false,
         },
     });
 
-    return Clients;
+    return Country;
 };

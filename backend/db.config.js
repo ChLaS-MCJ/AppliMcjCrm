@@ -27,21 +27,21 @@ db.User = require('./models/Users.models')(sequelize)
 db.Role = require('./models/Roles.models')(sequelize)
 db.Company = require('./models/Company.models')(sequelize)
 db.CompanyAdresse = require('./models/CompanyAdresse.models')(sequelize);
-db.Pays = require('./models/Pays.models')(sequelize);
+db.Country = require('./models/Country.models')(sequelize);
 db.ClientAdresse = require('./models/ClientsAdresse.models')(sequelize);
 db.Clients = require('./models/Clients.models')(sequelize);
 
-db.User.belongsTo(db.Role, { foreignKey: 'user_id' });
-db.Role.hasMany(db.User, { foreignKey: 'user_id', onDelete: 'NO ACTION' })
+db.User.belongsTo(db.Role, { foreignKey: 'role_id' });
+db.Role.hasMany(db.User, { foreignKey: 'role_id', onDelete: 'NO ACTION' })
 
 db.Clients.hasMany(db.Company, { foreignKey: 'clients_id' })
 db.Company.belongsTo(db.Clients, { foreignKey: 'clients_id', onDelete: 'NO ACTION' });
 
-db.Company.hasMany(db.CompanyAdresse, { foreignKey: 'company_id', onDelete: 'NO ACTION' })
+db.Company.hasMany(db.CompanyAdresse, { foreignKey: 'company_id', onDelete: 'cascade' });
 db.CompanyAdresse.belongsTo(db.Company, { foreignKey: 'company_id' });
 
-db.Pays.hasMany(db.Company, { foreignKey: 'pays_id', onDelete: 'NO ACTION' })
-db.Company.belongsTo(db.Pays, { foreignKey: 'pays_id' });
+db.Country.hasMany(db.Company, { foreignKey: 'pays_id', onDelete: 'NO ACTION' })
+db.Company.belongsTo(db.Country, { foreignKey: 'pays_id' });
 
 db.ClientAdresse.hasMany(db.Clients, { foreignKey: 'clientAdresse_id' })
 db.Clients.belongsTo(db.ClientAdresse, { foreignKey: 'clientAdresse_id', onDelete: 'NO ACTION' });

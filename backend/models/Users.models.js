@@ -12,7 +12,7 @@ const userModel = (sequelize) => {
     id: {
       type: DataTypes.INTEGER(10),
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     nom: {
       type: DataTypes.STRING(100),

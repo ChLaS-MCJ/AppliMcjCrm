@@ -1,5 +1,3 @@
-// services/CompanyService.js
-
 import Axios from './Caller.service';
 
 const GetAllCompany = async () => {
@@ -32,9 +30,9 @@ const AddCompany = async (companyData) => {
     }
 };
 
-const UpdateCompany = async (id, updatedData) => {
+const UpdateCompany = async (id, formData) => {
     try {
-        const response = await Axios.patch(`/company/${id}`, updatedData);
+        const response = await Axios.patch(`/company/${id}`, formData);
         return response.data;
     } catch (error) {
         console.error('Error during company update:', error);

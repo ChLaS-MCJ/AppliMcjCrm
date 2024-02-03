@@ -1,9 +1,9 @@
-// Import des bibliothèques et des composants nécessaires
-import React from 'react';
-import { Form, Input, Button, message } from 'antd';
-import CompanyService from '@/Services/Company.service'; // Assurez-vous d'importer le service approprié pour l'ajout d'entreprise
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Button, message, Select } from 'antd';
+import CompanyService from '@/Services/Company.service';
+import Countryservice from '@/Services/Country.service';
 
-// Mise en page du formulaire
+
 const formItemLayout = {
     labelCol: {
         xs: { span: 10 },
@@ -22,17 +22,35 @@ const tailFormItemLayout = {
     },
 };
 
-// Fonction de formulaire d'ajout d'entreprise
-const AddCompanyForm = ({ onFinish }) => {
+
+const AddCompanyForm = ({ onFinish, onSuccess }) => {
     const [form] = Form.useForm();
+    const [countries, setCountries] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const countriesData = await Countryservice.GetAllCountries();
+                setCountries(countriesData);
+
+            } catch (error) {
+                console.error('Error fetching countries:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleSubmit = async (values) => {
         try {
             const response = await CompanyService.AddCompany(values);
-
             if (response.message) {
                 message.success('Entreprise ajoutée avec succès!');
                 onFinish();
+                onSuccess();
             } else {
                 message.error('Erreur lors de l\'ajout de l\'entreprise : ' + response.message);
             }
@@ -120,18 +138,35 @@ const AddCompanyForm = ({ onFinish }) => {
             </Form.Item>
 
             <Form.Item
-                name="pays_name"
+                name="pays_id"
                 label="Pays"
                 rules={[
                     {
                         required: true,
-                        message: 'Veuillez entrer le pays de votre entreprise !',
+                        message: 'Veuillez sélectionner le pays de votre entreprise !',
                     },
                 ]}
                 style={{ width: '100%' }}
             >
-                <Input />
+                {loading ? (
+                    <Input placeholder="Chargement des pays..." disabled />
+                ) : (
+                    <Select
+                        showSearch
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                    >
+                        {countries.data.map(country => (
+                            <Select.Option key={country.id} value={country.id}>
+                                {country.nom_fr_fr}
+                            </Select.Option>
+                        ))}
+                    </Select>
+                )}
             </Form.Item>
+
 
             <Form.Item
                 name="company_ville"
