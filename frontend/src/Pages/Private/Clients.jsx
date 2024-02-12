@@ -1,8 +1,8 @@
 import React from 'react';
-import DataTable from '@/Components/DataTableClients/DataTableClients';
+import DataTableClients from '@/Components/DataTableClients/DataTableClients';
 const Clients = () => {
     return (
-        <DataTable />
+        <DataTableClients />
     );
 };
 

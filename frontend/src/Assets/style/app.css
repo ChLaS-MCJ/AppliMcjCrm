@@ -18,6 +18,7 @@
 @import './Pages/auth.css';
 @import './Pages/Dashboard.css';
 @import './Pages/Profil.css';
+@import './Pages/Clients.css';
 /*--------------Components-----------------*/
 @import './Components/collapseBox.css';
 @import './Components/cardprofil.css';

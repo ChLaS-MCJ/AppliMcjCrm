@@ -65,9 +65,10 @@ exports.AddCompany = async (req, res) => {
 };
 
 exports.UpdateCompany = async (req, res) => {
-    const companyId = parseInt(req.params.id);
+
     const updatedData = req.body;
-    console.log(req.body.company_name);
+
+    const companyId = parseInt(req.params.id);
 
     try {
         const company = await Company.findOne({ where: { id: companyId } });
@@ -76,7 +77,23 @@ exports.UpdateCompany = async (req, res) => {
             return res.status(404).json({ message: 'Company not found' });
         }
 
-        await company.update(updatedData);
+        let objectcompany = {
+            id: updatedData.id,
+            company_name: updatedData.company_name,
+            company_telephone: updatedData.company_telephone,
+            company_num_siret: updatedData.company_num_siret,
+            code_naf: updatedData.code_naf,
+            pays_id: updatedData.pays_id,
+        }
+
+        let objectcompanyAdresse = {
+            company_adresse: updatedData.company_adresse,
+            company_ville: updatedData.company_ville,
+            company_codepostal: updatedData.company_codepostal,
+        }
+
+        await company.update(objectcompany);
+        let updatedCompany = await CompanyAdresse.update(objectcompanyAdresse, { where: { id: updatedData.idAdresse } });
 
         return res.json({ message: 'Company updated successfully', data: updatedCompany });
     } catch (error) {

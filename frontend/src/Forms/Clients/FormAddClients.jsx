@@ -1,33 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Typography, Divider, message, Select } from 'antd';
+import { Form, Input, Button, message, Select } from 'antd';
 
-import EntrepriseService from "@/Services/Company.service";
+import ClientService from '@/Services/Clients.service';
 import Countryservice from '@/Services/Country.service';
-const { Title } = Typography;
 
 const formItemLayout = {
     labelCol: {
         xs: { span: 10 },
-        sm: { span: 6 },
+        sm: { span: 9 },
     },
     wrapperCol: {
         xs: { span: 14 },
-        sm: { span: 14 },
+        sm: { span: 16 },
     },
 };
 
 const tailFormItemLayout = {
     wrapperCol: {
         xs: { span: 26, offset: 6 },
-        sm: { span: 4, offset: 14 },
+        sm: { span: 3, offset: 8 },
     },
 };
 
-/**
- * Composant de mise à jour des informations de l'entreprise.
- * Permet de modifier les informations de l'entreprise.
- */
-const FormUpdateCompany = ({ initialCompanyData, onSuccess }) => {
+const FormAddClients = ({ onFinish, onSuccess }) => {
     const [form] = Form.useForm();
     const [countries, setCountries] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -47,88 +42,36 @@ const FormUpdateCompany = ({ initialCompanyData, onSuccess }) => {
 
         fetchData();
     }, []);
-    /**
-     * Gère la soumission du formulaire de mise à jour des informations de l'entreprise.
-     * @param {Object} values - Les valeurs du formulaire.
-     */
-    const onFinish = async (values) => {
+
+    const handleSubmit = async (values) => {
         try {
-
-            const validatedValues = await form.validateFields();
-
-            let ObjectCompany = {
-                id: initialCompanyData.id,
-                company_name: validatedValues.company_name,
-                company_telephone: validatedValues.company_telephone,
-                company_num_siret: validatedValues.company_num_siret,
-                code_naf: validatedValues.code_naf,
-                company_adresse: validatedValues.company_adresse,
-                pays_id: validatedValues.pays_id,
-                company_ville: validatedValues.company_ville,
-                company_codepostal: validatedValues.company_codepostal,
-                idAdresse: initialCompanyData.CompanyAdresses[0].id,
-            }
-
-            const response = await EntrepriseService.UpdateCompany(initialCompanyData.id, ObjectCompany);
-
+            const response = await ClientService.AddClient(values);
             if (response.message) {
-                message.success('Informations de l\'entreprise mises à jour avec succès!');
+                message.success('Client ajouté avec succès!');
+                onFinish();
                 onSuccess();
             } else {
-                message.error('Erreur lors de la mise à jour des informations de l\'entreprise : ' + response.message);
+                message.error('Erreur lors de l\'ajout du client : ' + response.message);
             }
-        } catch (errorInfo) {
-            console.log('Validation Failed:', errorInfo);
+        } catch (error) {
+            console.error('Erreur lors de la soumission du formulaire :', error);
         }
-    };
-
-    /**
-     * Gère l'échec de la soumission du formulaire.
-     * @param {Object} errorInfo - Informations sur l'erreur.
-     */
-    const onFinishFailed = (errorInfo) => {
-        message.open({
-            type: 'error',
-            content: 'Échec de la validation du formulaire',
-        });
     };
 
     return (
         <Form
             {...formItemLayout}
             form={form}
-            name="updateEntrepriseInfo"
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flexStart',
-                maxWidth: 600,
-            }}
-
-            initialValues={{
-                company_name: initialCompanyData.company_name,
-                company_telephone: initialCompanyData.company_telephone,
-                company_num_siret: initialCompanyData.company_num_siret,
-                code_naf: initialCompanyData.code_naf,
-                company_adresse: initialCompanyData.CompanyAdresses[0].company_adresse,
-                pays_id: initialCompanyData.Country.id,
-                company_ville: initialCompanyData.CompanyAdresses[0].company_ville,
-                company_codepostal: initialCompanyData.CompanyAdresses[0].company_codepostal,
-            }}
+            name="addClientForm"
+            onFinish={handleSubmit}
         >
-            <Divider />
-            <Title className="titleUpdateEntrepriseInfo" level={3}>Modification des informations de l'entreprise</Title>
-            <Divider />
-
             <Form.Item
-                name="company_name"
+                name="clients_name"
                 label="Nom"
                 rules={[
                     {
                         required: true,
-                        message: 'Veuillez entrer le nom de votre entreprise !',
+                        message: 'Veuillez entrer le nom du client !',
                         whitespace: true,
                     },
                 ]}
@@ -138,12 +81,47 @@ const FormUpdateCompany = ({ initialCompanyData, onSuccess }) => {
             </Form.Item>
 
             <Form.Item
-                name="company_telephone"
+                name="clients_prenom"
+                label="Prénom"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Veuillez entrer le prénom du client !',
+                        whitespace: true,
+                    },
+                ]}
+                style={{ width: '100%' }}
+            >
+                <Input />
+            </Form.Item>
+
+            <Form.Item
+                name="clients_civilite"
+                label="Civilité"
+                style={{ width: '100%' }}
+            >
+                <Select>
+                    <Select.Option value="homme">Homme</Select.Option>
+                    <Select.Option value="femme">Femme</Select.Option>
+                    <Select.Option value="autres">Autres</Select.Option>
+                </Select>
+            </Form.Item>
+
+            <Form.Item
+                name="clients_tel"
                 label="Téléphone"
+                style={{ width: '100%' }}
+            >
+                <Input />
+            </Form.Item>
+
+            <Form.Item
+                name="clients_mail"
+                label="Adresse Email"
                 rules={[
                     {
                         required: true,
-                        message: 'Veuillez entrer le numéro de téléphone de votre entreprise !',
+                        message: 'Veuillez entrer l\'adresse email du client !',
                     },
                 ]}
                 style={{ width: '100%' }}
@@ -152,34 +130,7 @@ const FormUpdateCompany = ({ initialCompanyData, onSuccess }) => {
             </Form.Item>
 
             <Form.Item
-                name="company_num_siret"
-                label="Numéro SIRET"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Veuillez entrer le numéro SIRET de votre entreprise !',
-                    },
-                ]}
-                style={{ width: '100%' }}
-            >
-                <Input />
-            </Form.Item>
-            <Form.Item
-                name="code_naf"
-                label="CodeNaf"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Veuillez entrer le code naf de votre entreprise !',
-                    },
-                ]}
-                style={{ width: '100%' }}
-            >
-                <Input />
-            </Form.Item>
-
-            <Form.Item
-                name="company_adresse"
+                name="clients_adresse"
                 label="Adresse"
                 rules={[
                     {
@@ -222,8 +173,9 @@ const FormUpdateCompany = ({ initialCompanyData, onSuccess }) => {
                 )}
             </Form.Item>
 
+
             <Form.Item
-                name="company_ville"
+                name="clients_ville"
                 label="Ville"
                 rules={[
                     {
@@ -237,7 +189,7 @@ const FormUpdateCompany = ({ initialCompanyData, onSuccess }) => {
             </Form.Item>
 
             <Form.Item
-                name="company_codepostal"
+                name="clients_codepostal"
                 label="Code postal"
                 rules={[
                     {
@@ -252,11 +204,11 @@ const FormUpdateCompany = ({ initialCompanyData, onSuccess }) => {
 
             <Form.Item {...tailFormItemLayout}>
                 <Button type="primary" htmlType="submit">
-                    Mettre à jour l'entreprise
+                    Ajouter le client
                 </Button>
             </Form.Item>
         </Form>
-    )
+    );
 };
 
-export default FormUpdateCompany;
+export default FormAddClients;

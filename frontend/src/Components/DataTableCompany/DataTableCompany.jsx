@@ -88,6 +88,8 @@ const DataTableCompany = () => {
 
   const handleAddCompanySuccess = () => {
     refreshData();
+    setDrawerVisible(false);
+    setShowForm(false);
   };
 
   const handleTableChange = (pagination, filters, sorter) => {
@@ -328,7 +330,7 @@ const DataTableCompany = () => {
 
                 {showForm && (
                   <div className='ContainerCompanyForm'>
-                    <FormUpdateCompany initialCompanyData={selectedRowData} />
+                    <FormUpdateCompany initialCompanyData={selectedRowData} onSuccess={handleAddCompanySuccess} />
                   </div>
                 )}
               </div>

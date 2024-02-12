@@ -1,5 +1,5 @@
 // HeaderContent.jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar, Dropdown, Layout, Divider, Switch } from 'antd';
 import { SettingOutlined, LogoutOutlined } from '@ant-design/icons';
@@ -138,6 +138,7 @@ const HeaderContent = () => {
       />
 
       <WeatherSwitch />
+
     </Header>
   );
 };

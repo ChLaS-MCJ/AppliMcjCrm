@@ -43,16 +43,18 @@ db.CompanyAdresse.belongsTo(db.Company, { foreignKey: 'company_id' });
 db.Country.hasMany(db.Company, { foreignKey: 'pays_id', onDelete: 'NO ACTION' })
 db.Company.belongsTo(db.Country, { foreignKey: 'pays_id' });
 
-db.ClientAdresse.hasMany(db.Clients, { foreignKey: 'clientAdresse_id' })
-db.Clients.belongsTo(db.ClientAdresse, { foreignKey: 'clientAdresse_id', onDelete: 'NO ACTION' });
-// db.Cocktail.belongsTo(db.User, {foreignKey: 'user_id'})
-// db.User.hasMany(db.Cocktail, {foreignKey: 'user_id', onDelete: 'cascade'})
+db.ClientAdresse.hasMany(db.Clients, { foreignKey: 'clientsAdresse_id', onDelete: 'cascade' })
+db.Clients.belongsTo(db.ClientAdresse, { foreignKey: 'clientsAdresse_id', onDelete: 'NO ACTION' });
+
+db.Country.hasMany(db.ClientAdresse, { foreignKey: 'clientAdresseCountry_id', onDelete: 'NO ACTION' })
+db.ClientAdresse.belongsTo(db.Country, { foreignKey: 'clientAdresseCountry_id' });
+
 /*********************************/
 /*** Synchronisation des modèles */
 // sequelize.sync(err => {
 //     console.log('2. 🔥 Erreur courante ayant provoqué un problème → : Database Sync Error', err)
 // })
 
-db.sequelize.sync({ alter: true })
+// db.sequelize.sync({ alter: true })
 
 module.exports = db
