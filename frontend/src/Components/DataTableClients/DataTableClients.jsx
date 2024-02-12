@@ -418,31 +418,31 @@ const DataTableClients = () => {
                   <div className='containerinfodrawer'>
                     <div>
                       <ShopOutlined />
-                      <strong>Nom de l'entreprise:</strong> {selectedRowData.societeNom}
+                      <strong>Nom de l'entreprise:</strong> {selectedRowData.Company.company_name}
                     </div>
                     <div>
                       <PhoneOutlined />
-                      <strong>Téléphone de l'entreprise:</strong> {selectedRowData.societeTel}
+                      <strong>Téléphone de l'entreprise:</strong> {selectedRowData.Company.company_telephone}
                     </div>
                     <div>
                       <InfoCircleOutlined />
-                      <strong>N°Siret:</strong> {selectedRowData.numSiret}
+                      <strong>N°Siret:</strong> {selectedRowData.Company.company_num_siret}
                     </div>
                     <div>
                       <EnvironmentOutlined />
-                      <strong>Rue de l'entreprise:</strong> {selectedRowData.societeRue}
+                      <strong>Rue de l'entreprise:</strong> {selectedRowData.Company.CompanyAdresses[0].company_adresse}
                     </div>
                     <div>
                       <BankOutlined />
-                      <strong>Pays de l'entreprise:</strong> {selectedRowData.societePays}
+                      <strong>Pays de l'entreprise:</strong> {selectedRowData.Company.Country.nom_fr_fr}
                     </div>
                     <div>
                       <EnvironmentOutlined />
-                      <strong>Ville de l'entreprise:</strong> {selectedRowData.societeVille}
+                      <strong>Ville de l'entreprise:</strong> {selectedRowData.Company.CompanyAdresses[0].company_ville}
                     </div>
                     <div>
                       <EnvironmentOutlined />
-                      <strong>Code Postal de l'entreprise:</strong> {selectedRowData.societeCodePostal}
+                      <strong>Code Postal de l'entreprise:</strong> {selectedRowData.Company.CompanyAdresses[0].company_codepostal}
                     </div>
                   </div>
                 </Space>
