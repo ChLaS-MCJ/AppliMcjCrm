@@ -39,29 +39,9 @@ const items = [
     label: <Link to={'/clients'}>Clients</Link>,
   },
   {
-    key: 'offer',
-    icon: <FileOutlined />,
-    label: <Link to={'/offer'}>offer</Link>,
-  },
-  {
-    key: 'customer',
-    icon: <CustomerServiceOutlined />,
-    label: <Link to={'/customer'}>customer</Link>,
-  },
-  {
     key: 'compagny',
     icon: <IdcardOutlined />,
     label: <Link to={'/compagny'}>Entreprises</Link>,
-  },
-  {
-    key: 'quote',
-    icon: <FileSyncOutlined />,
-    label: <Link to={'/quote'}>quote</Link>,
-  },
-  {
-    key: 'payment',
-    icon: <CreditCardOutlined />,
-    label: <Link to={'/payment'}>payment</Link>,
   },
   {
     key: 'employee',
