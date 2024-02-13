@@ -6,23 +6,18 @@ const Country = db.Country;
 const Company = db.Company;
 exports.getAllClients = async (req, res) => {
     try {
-
         const clients = await Client.findAll({
             include: [
                 {
                     model: ClientAdresse,
                     include: Country,
                 },
+                {
+                    model: Company,
+                    include: [CompanyAdresse, Country],
+                },
             ],
         });
-
-        for (const client of clients) {
-            const companyLink = await Company.findOne({
-                where: { id: client.id },
-                include: [CompanyAdresse, Country],
-            });
-            client.setDataValue('Company', companyLink);
-        }
 
         return res.json({ data: clients });
     } catch (error) {
@@ -134,14 +129,14 @@ exports.LinkCompanyAtClient = async (req, res) => {
     const companyIdLink = req.body.companyId;
 
     try {
-        const updateCompany = await Company.update(
+        await Company.update(
             { clients_id: clientId },
             { where: { id: companyIdLink } }
         );
 
-        return res.json({ message: 'Company updated successfully', data: { updateCompany } });
+        return res.json({ message: 'Client Link successfully updated' });
     } catch (error) {
+        console.error('Error during database update:', error);
         return res.status(500).json({ message: 'Database Error', error });
     }
 };
-

@@ -165,7 +165,7 @@ const FormAddClients = ({ onFinish, onSuccess }) => {
                         }
                     >
                         {countries.data.map(country => (
-                            <Select.Option key={country.id} value={country.id}>
+                            <Select.Option key={`${country.nom_fr_fr}-${country.id}`} value={country.id}>
                                 {country.nom_fr_fr}
                             </Select.Option>
                         ))}

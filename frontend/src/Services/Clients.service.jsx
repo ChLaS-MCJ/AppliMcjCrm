@@ -50,11 +50,11 @@ const DeleteClient = async (id) => {
 };
 
 const LinkCompany = async (value, clientID) => {
-
     try {
-        await Axios.patch(`/clients/linkcompany/${clientID}`, value);
+        const response = await Axios.patch(`/clients/linkcompany/${clientID}`, value);
+        return response.data;
     } catch (error) {
-        console.error('Error during client deletion:', error);
+        console.error('Erreur lors de la liaison de l\'entreprise au client :', error);
         throw error;
     }
 };

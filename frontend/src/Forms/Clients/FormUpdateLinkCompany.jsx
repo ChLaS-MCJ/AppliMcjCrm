@@ -22,7 +22,7 @@ const tailFormItemLayout = {
     },
 };
 
-const FormAddClients = ({ clientID }) => {
+const FromUpdateLinkCompany = ({ onFinish, onSuccess, clientID }) => {
     const [form] = Form.useForm();
     const [Allcompany, setCompany] = useState({});
     const [loading, setLoading] = useState(true);
@@ -46,13 +46,13 @@ const FormAddClients = ({ clientID }) => {
     const handleSubmit = async (values) => {
         try {
             const response = await ClientService.LinkCompany(values, clientID);
-            console.log(response)
+
             if (response) {
-                message.success('Entreprise Lié avec succès!');
+                message.success('Entreprise liée avec succès!');
                 onFinish();
                 onSuccess();
             } else {
-                message.error('Erreur lors de l\'ajout du client : ' + response.message);
+                message.error(`Erreur lors de l'ajout du client: ${response ? response.error : 'Réponse non définie'}.`);
             }
         } catch (error) {
             console.error('Erreur lors de la soumission du formulaire :', error);
@@ -88,7 +88,7 @@ const FormAddClients = ({ clientID }) => {
                         }
                     >
                         {Allcompany.data.map(company => (
-                            <Select.Option key={Allcompany.id} value={company.id}>
+                            <Select.Option key={company.id} value={company.id}>
                                 {company.company_name}
                             </Select.Option>
                         ))}
@@ -105,4 +105,4 @@ const FormAddClients = ({ clientID }) => {
     );
 };
 
-export default FormAddClients;
+export default FromUpdateLinkCompany;

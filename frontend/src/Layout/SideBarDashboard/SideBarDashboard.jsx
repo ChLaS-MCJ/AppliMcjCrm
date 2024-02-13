@@ -9,7 +9,6 @@ import logoIcon from '@/Assets/images/JustLogo.png';
 import logoIconMobile from '@/Assets/images/logo-icon.png';
 import {
   CustomerServiceOutlined,
-  FileTextOutlined,
   FileSyncOutlined,
   DashboardOutlined,
   TeamOutlined,

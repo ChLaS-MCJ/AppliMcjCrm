@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Table, Input, Button, Space, Drawer, Divider, Breadcrumb, Typography } from 'antd';
+import { Table, Input, Button, Space, Drawer, Divider, Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 import {
   SearchOutlined,
@@ -15,7 +15,8 @@ import {
   IdcardOutlined,
   HomeOutlined,
   RightOutlined,
-  AppstoreAddOutlined
+  AppstoreAddOutlined,
+  CloseOutlined
 } from '@ant-design/icons';
 
 import { useSelector } from 'react-redux';
@@ -170,20 +171,20 @@ const DataTableClients = () => {
       children: [
         {
           title: <span style={{ color: 'orange' }}>Nom</span>,
-          dataIndex: ['Company', 'company_name'],
+          dataIndex: ['Companies', [0], 'company_name'],
           key: 'societeNom',
           width: 100,
-          ...getColumnSearchProps('Company.company_name'),
+          ...getColumnSearchProps('Companies.company_name'),
         },
         {
           title: 'Téléphone',
-          dataIndex: ['Company', 'company_telephone'],
+          dataIndex: ['Companies', [0], 'company_telephone'],
           key: 'societeTel',
           width: 100,
         },
         {
           title: 'N°Siret',
-          dataIndex: ['Company', 'company_num_siret'],
+          dataIndex: ['Companies', [0], 'company_num_siret'],
           key: 'numSiret',
           width: 100,
         },
@@ -192,7 +193,7 @@ const DataTableClients = () => {
           children: [
             {
               title: 'Rue',
-              dataIndex: ['Company', 'CompanyAdresses', [0], 'company_adresse'],
+              dataIndex: ['Companies', [0], 'CompanyAdresses', [0], 'company_adresse'],
               key: 'societeRue',
               width: 150,
             },
@@ -201,19 +202,19 @@ const DataTableClients = () => {
               children: [
                 {
                   title: 'Pays',
-                  dataIndex: ['Company', 'Country', 'nom_fr_fr'],
+                  dataIndex: ['Companies', [0], 'Country', 'nom_fr_fr'],
                   key: 'societePays',
                   width: 100,
                 },
                 {
                   title: 'Ville',
-                  dataIndex: ['Company', 'CompanyAdresses', [0], 'company_ville'],
+                  dataIndex: ['Companies', [0], 'CompanyAdresses', [0], 'company_ville'],
                   key: 'societeVille',
                   width: 100,
                 },
                 {
                   title: 'Code Postal',
-                  dataIndex: ['Company', 'CompanyAdresses', [0], 'company_codepostal'],
+                  dataIndex: ['Companies', [0], 'CompanyAdresses', [0], 'company_codepostal'],
                   key: 'societeCodePostal',
                   width: 100,
                 },
@@ -236,6 +237,10 @@ const DataTableClients = () => {
       ),
     },
   ];
+
+  const CloseIcon = ({ onClick }) => (
+    <Button className="BtncloseFormUpdateLink" onClick={onClick} type="primary" icon={<CloseOutlined />} />
+  );
 
   const fetchData = async () => {
     setLoading(true);
@@ -293,12 +298,17 @@ const DataTableClients = () => {
   };
 
   const handleUpdateCompanyClick = () => {
-    setUpdateCompanyFormVisible(true);
+    setUpdateCompanyFormVisible(!updateCompanyFormVisible);
+  };
+
+  const handleUpdateClientLinkSuccess = () => {
+    refreshData();
+    setUpdateCompanyFormVisible(!updateCompanyFormVisible);
+    setDrawerVisible(!updateCompanyFormVisible);
   };
 
   return (
     <div className='maincontainclients'>
-
       <Button type="dashed" className="btnAddcompany btn-orange" icon={<AppstoreAddOutlined />} onClick={handleToggleAddClientsDrawer}>
         Ajouter un Clients
       </Button>
@@ -346,18 +356,15 @@ const DataTableClients = () => {
               ]}
             />
 
-
             <div className="Boxdrawerheadercontainer" >
               <Link to={`/clients/${selectedRowData.clients_name}`}>Vers la fiche cliente détaillée <RightOutlined /></Link>
             </div>
-
 
             <Divider />
 
             <h2> <UserOutlined /> Utilisateur</h2>
             <Space direction="vertical">
               <div className='containerinfodrawer'>
-
                 <div>
                   <UserOutlined />
                   <strong>Nom:</strong> {selectedRowData.clients_name}
@@ -400,11 +407,23 @@ const DataTableClients = () => {
             <Divider />
 
             {updateCompanyFormVisible ? (
-              <FormUpdateLinkCompany clientID={selectedRowData.id} onCancel={() => setUpdateCompanyFormVisible(false)} />
+              <div>
+                <CloseIcon onClick={handleUpdateCompanyClick} key={`BtnCloseFormFormUpdateLinkCompany-${selectedRowData.id}`} />
+                <FormUpdateLinkCompany
+                  key={`FormUpdateLinkCompany-${selectedRowData.id}`}
+                  clientID={selectedRowData.id}
+                  onFinish={handleUpdateCompanyClick} onSuccess={handleUpdateClientLinkSuccess}
+                />
+              </div>
             ) : (
               <div className='ContainerEntreprise'>
                 <h2>
                   <ShopOutlined style={{ marginRight: '8px' }} /> Entreprise
+                  {selectedRowData.Companies.length > 1 && (
+                    <span style={{ marginLeft: '5px', color: '#1677ff' }}>
+                      ({selectedRowData.Companies.length})
+                    </span>
+                  )}
                   <Button
                     className='ButtonLinkCompany'
                     type="primary"
@@ -416,34 +435,42 @@ const DataTableClients = () => {
                 </h2>
                 <Space direction="vertical">
                   <div className='containerinfodrawer'>
-                    <div>
-                      <ShopOutlined />
-                      <strong>Nom de l'entreprise:</strong> {selectedRowData.Company.company_name}
-                    </div>
-                    <div>
-                      <PhoneOutlined />
-                      <strong>Téléphone de l'entreprise:</strong> {selectedRowData.Company.company_telephone}
-                    </div>
-                    <div>
-                      <InfoCircleOutlined />
-                      <strong>N°Siret:</strong> {selectedRowData.Company.company_num_siret}
-                    </div>
-                    <div>
-                      <EnvironmentOutlined />
-                      <strong>Rue de l'entreprise:</strong> {selectedRowData.Company.CompanyAdresses[0].company_adresse}
-                    </div>
-                    <div>
-                      <BankOutlined />
-                      <strong>Pays de l'entreprise:</strong> {selectedRowData.Company.Country.nom_fr_fr}
-                    </div>
-                    <div>
-                      <EnvironmentOutlined />
-                      <strong>Ville de l'entreprise:</strong> {selectedRowData.Company.CompanyAdresses[0].company_ville}
-                    </div>
-                    <div>
-                      <EnvironmentOutlined />
-                      <strong>Code Postal de l'entreprise:</strong> {selectedRowData.Company.CompanyAdresses[0].company_codepostal}
-                    </div>
+                    {selectedRowData.Companies.length > 0 ? (
+                      <div>
+                        <div>
+                          <ShopOutlined />
+                          <strong>Nom de l'entreprise:</strong> {selectedRowData.Companies[0].company_name}
+                        </div>
+                        <div>
+                          <PhoneOutlined />
+                          <strong>Téléphone de l'entreprise:</strong> {selectedRowData.Companies[0].company_telephone}
+                        </div>
+                        <div>
+                          <InfoCircleOutlined />
+                          <strong>N°Siret:</strong> {selectedRowData.Companies[0].company_num_siret}
+                        </div>
+                        <div>
+                          <EnvironmentOutlined />
+                          <strong>Rue de l'entreprise:</strong> {selectedRowData.Companies[0].CompanyAdresses[0].company_adresse}
+                        </div>
+                        <div>
+                          <BankOutlined />
+                          <strong>Pays de l'entreprise:</strong> {selectedRowData.Companies[0].Country.nom_fr_fr}
+                        </div>
+                        <div>
+                          <EnvironmentOutlined />
+                          <strong>Ville de l'entreprise:</strong> {selectedRowData.Companies[0].CompanyAdresses[0].company_ville}
+                        </div>
+                        <div>
+                          <EnvironmentOutlined />
+                          <strong>Code Postal de l'entreprise:</strong> {selectedRowData.Companies[0].CompanyAdresses[0].company_codepostal}
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <p>Aucune entreprise liée.</p>
+                      </div>
+                    )}
                   </div>
                 </Space>
               </div>
@@ -462,7 +489,7 @@ const DataTableClients = () => {
         open={addClientsDrawerVisible}
         className={isDarkMode ? 'dark-drawer' : 'light-drawer'}
       >
-        <FormAddClients onFinish={handleToggleAddClientsDrawer} onSuccess={handleAddClientSuccess} />
+        <FormAddClients key="FormAddClients" onFinish={handleToggleAddClientsDrawer} onSuccess={handleAddClientSuccess} />
       </Drawer>
     </div >
   );
