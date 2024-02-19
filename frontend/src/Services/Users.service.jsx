@@ -39,10 +39,20 @@ const getUserProfile = async (id) => {
     }
 };
 
+const getAllUser = async () => {
+    try {
+        const response = await Axios.get(`/users`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const UsersService = {
     registerUsers,
     updateUserProfile,
-    getUserProfile
+    getUserProfile,
+    getAllUser
 
 };
 

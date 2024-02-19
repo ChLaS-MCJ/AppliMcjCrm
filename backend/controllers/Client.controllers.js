@@ -4,6 +4,9 @@ const ClientAdresse = db.ClientAdresse;
 const CompanyAdresse = db.CompanyAdresse;
 const Country = db.Country;
 const Company = db.Company;
+const Association = db.Association;
+const AssociationAdresse = db.AssociationAdresse;
+
 exports.getAllClients = async (req, res) => {
     try {
         const clients = await Client.findAll({
@@ -15,6 +18,10 @@ exports.getAllClients = async (req, res) => {
                 {
                     model: Company,
                     include: [CompanyAdresse, Country],
+                },
+                {
+                    model: Association,
+                    include: [AssociationAdresse],
                 },
             ],
         });
@@ -69,12 +76,41 @@ exports.addClient = async (req, res) => {
             clientsAdresse_id: newAdresseClientId,
         });
 
+        if ('associationId' in clientData) {
+            await Client.update(
+                { clientsAsso_id: clientData.associationId },
+                { where: { id: newClient.id } }
+            );
+        }
+
+        if ('company_name' in clientData) {
+
+            const newCompany = await Company.create({
+                company_name: clientData.company_name,
+                company_telephone: clientData.company_telephone,
+                company_num_siret: clientData.company_num_siret,
+                code_naf: clientData.code_naf,
+                clients_id: newClient.id,
+                pays_id: clientData.company_pays_id,
+            });
+
+            const companyId = newCompany.id;
+
+            CompanyAdresse.create({
+                company_adresse: clientData.company_adresse,
+                company_ville: clientData.company_ville,
+                company_codepostal: clientData.company_codepostal,
+                company_id: companyId,
+            });
+        }
+
         return res.status(201).json({ message: 'Client added successfully', data: newClient });
 
     } catch (error) {
         return res.status(500).json({ message: 'Database Error', error });
     }
 };
+
 
 exports.updateClient = async (req, res) => {
     const updatedData = req.body;
@@ -135,6 +171,23 @@ exports.LinkCompanyAtClient = async (req, res) => {
         );
 
         return res.json({ message: 'Client Link successfully updated' });
+    } catch (error) {
+        console.error('Error during database update:', error);
+        return res.status(500).json({ message: 'Database Error', error });
+    }
+};
+
+exports.LinkAssociationAtClient = async (req, res) => {
+    const clientId = parseInt(req.params.id);
+    const associationIdLink = req.body.associationId;
+
+    try {
+        await Client.update(
+            { clientsAsso_id: associationIdLink },
+            { where: { id: clientId } }
+        );
+
+        return res.json({ message: 'Client Link at association successfully updated' });
     } catch (error) {
         console.error('Error during database update:', error);
         return res.status(500).json({ message: 'Database Error', error });

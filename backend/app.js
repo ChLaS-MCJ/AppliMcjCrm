@@ -28,6 +28,7 @@ const auth_router = require('./routes/Auth.routes');
 const company_router = require('./routes/Company.routes');
 const country_router = require('./routes/Country.routes');
 const clients_router = require('./routes/Clients.routes');
+const association_router = require('./routes/Association.routes');
 
 // Configuration de CORS à un seul endroit pour toutes les routes
 app.use(cors({
@@ -49,6 +50,7 @@ app.use('/api/auth', auth_router);
 app.use('/api/company', company_router);
 app.use('/api/country', country_router);
 app.use('/api/clients', clients_router);
+app.use('/api/association', association_router);
 app.use('/api/images', express.static(path.join(__dirname, 'Assets/Images')));
 
 // Gestionnaire d'erreurs en production

@@ -1,0 +1,8 @@
+.FormUpdateAssociation div {
+
+    align-items: baseline;
+}
+
+.InputPays div :nth-child(2) div {
+    width: 85%;
+}

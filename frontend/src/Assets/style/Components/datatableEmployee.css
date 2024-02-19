@@ -1,0 +1,43 @@
+.ImgEmployee {
+    padding: 20px;
+    border-radius: 50%;
+
+}
+
+.DrawerEmployeContainer {
+    height: 100%;
+    width: 90%;
+    margin: auto;
+}
+
+.DrawerEmployeContainer div {
+    width: 100% !important;
+    display: flex;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.DrawerEmployeContainer h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.DrawerEmployeContainer div img {
+    width: 50% !important;
+}
+
+.containerEmployeinfodrawer svg {
+    margin-right: 8px;
+}
+
+.containerEmployeinfodrawer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 20px;
+}
+
+.containerEmployeinfodrawer div strong {
+    margin-right: 5px;
+}

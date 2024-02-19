@@ -6,7 +6,7 @@
 /***********************************/
 /*** Import necessary modules */
 const express = require('express')
-const clientController = require('../controllers/Client.controllers')
+const associationController = require('../controllers/Association.controllers')
 /***************************************/
 
 /*** Get the express router */
@@ -21,14 +21,12 @@ router.use((req, res, next) => {
 })
 
 /***********************************/
-/*** Routing for client resource */
-router.get('/', clientController.getAllClients)
-router.get('/:id', clientController.getOneClient)
-router.post('/', clientController.addClient)
-router.patch('/:id', clientController.updateClient)
-router.patch('/linkcompany/:id', clientController.LinkCompanyAtClient)
-router.patch('/linkassociation/:id', clientController.LinkAssociationAtClient)
-router.delete('/:id', clientController.deleteClient)
+/*** Routing for Association resource */
+router.get('/', associationController.GetAllAssociation)
+router.get('/:id', associationController.GetOneAssociation)
+router.post('/', associationController.AddAssociation)
+router.patch('/:id', associationController.UpdateAssociation)
+router.delete('/:id', associationController.DeleteAssociation)
 
 
 module.exports = router

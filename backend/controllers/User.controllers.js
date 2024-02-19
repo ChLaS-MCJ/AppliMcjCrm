@@ -2,6 +2,7 @@
 /*** Import des module nécessaires */
 const db = require('../db.config')
 const User = db.User
+const Role = db.Role
 const path = require('path');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
@@ -49,6 +50,18 @@ exports.getUser = async (req, res) => {
         return res.status(500).json({ message: 'Database Error', error: err })
     }
 }
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const Users = await User.findAll({
+            include: [Role],
+        });
+
+        return res.json({ data: Users });
+    } catch (error) {
+        return res.status(500).json({ message: 'Erreur de la base de données', error });
+    }
+};
 
 /**
  * Updates a specific user in the database based on the provided id parameter and the request body.

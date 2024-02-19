@@ -15,6 +15,9 @@ const Dashboard = lazy(() => import('@/Pages/Private/Dashboard'));
 const Profil = lazy(() => import('@/Pages/Private/Profil'));
 const ClientsDetails = lazy(() => import('@/Pages/Private/ClientsDetails'));
 const Company = lazy(() => import('@/Pages/Private/Company'));
+const Association = lazy(() => import('@/Pages/Private/Association'));
+const Employe = lazy(() => import('@/Pages/Private/Employe'));
+
 const AppRouter = () => {
   const element = useRoutes([
     {
@@ -60,6 +63,14 @@ const AppRouter = () => {
         {
           path: 'compagny',
           element: <Company />,
+        },
+        {
+          path: 'association',
+          element: <Association />,
+        },
+        {
+          path: 'employe',
+          element: <Employe />,
         },
         {
           path: '/',

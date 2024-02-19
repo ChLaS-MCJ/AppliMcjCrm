@@ -30,6 +30,8 @@ db.CompanyAdresse = require('./models/CompanyAdresse.models')(sequelize);
 db.Country = require('./models/Country.models')(sequelize);
 db.ClientAdresse = require('./models/ClientsAdresse.models')(sequelize);
 db.Clients = require('./models/Clients.models')(sequelize);
+db.Association = require('./models/Association.models')(sequelize);
+db.AssociationAdresse = require('./models/AssociationAdresse.models')(sequelize);
 
 db.User.belongsTo(db.Role, { foreignKey: 'role_id' });
 db.Role.hasMany(db.User, { foreignKey: 'role_id', onDelete: 'NO ACTION' })
@@ -48,6 +50,15 @@ db.Clients.belongsTo(db.ClientAdresse, { foreignKey: 'clientsAdresse_id', onDele
 
 db.Country.hasMany(db.ClientAdresse, { foreignKey: 'clientAdresseCountry_id', onDelete: 'NO ACTION' })
 db.ClientAdresse.belongsTo(db.Country, { foreignKey: 'clientAdresseCountry_id' });
+
+db.Association.hasMany(db.Clients, { foreignKey: 'clientsAsso_id' })
+db.Clients.belongsTo(db.Association, { foreignKey: 'clientsAsso_id', onDelete: 'NO ACTION' });
+
+db.AssociationAdresse.hasMany(db.Association, { foreignKey: 'associationAdresse_id', onDelete: 'cascade' });
+db.Association.belongsTo(db.AssociationAdresse, { foreignKey: 'associationAdresse_id' });
+
+db.Country.hasMany(db.AssociationAdresse, { foreignKey: 'associationpays_id', onDelete: 'NO ACTION' })
+db.AssociationAdresse.belongsTo(db.Country, { foreignKey: 'associationpays_id' });
 
 /*********************************/
 /*** Synchronisation des modèles */

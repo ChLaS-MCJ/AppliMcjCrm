@@ -49,15 +49,7 @@ const DeleteClient = async (id) => {
     }
 };
 
-const LinkCompany = async (value, clientID) => {
-    try {
-        const response = await Axios.patch(`/clients/linkcompany/${clientID}`, value);
-        return response.data;
-    } catch (error) {
-        console.error('Erreur lors de la liaison de l\'entreprise au client :', error);
-        throw error;
-    }
-};
+
 
 export const ClientService = {
     GetAllClients,
@@ -65,7 +57,6 @@ export const ClientService = {
     AddClient,
     UpdateClient,
     DeleteClient,
-    LinkCompany,
 };
 
 export default ClientService;

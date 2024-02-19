@@ -16,13 +16,16 @@ import {
   HomeOutlined,
   RightOutlined,
   AppstoreAddOutlined,
-  CloseOutlined
+  CloseOutlined,
+  ReconciliationOutlined
 } from '@ant-design/icons';
 
 import { useSelector } from 'react-redux';
 
 import FormAddClients from '@/Forms/Clients/FormAddClients';
 import FormUpdateLinkCompany from "@/Forms/Clients/FormUpdateLinkCompany";
+import FormUpdateLinkAssociation from "@/Forms/Clients/FormUpdateLinkAssociation";
+
 import { ClientService } from '@/Services/Clients.service';
 
 function getColumnSearchProps(dataIndex) {
@@ -74,6 +77,7 @@ const DataTableClients = () => {
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [addClientsDrawerVisible, setAddClientsDrawerVisible] = useState(false);
   const [updateCompanyFormVisible, setUpdateCompanyFormVisible] = useState(false);
+  const [updateAssociationFormVisible, setUpdateAssociationFormVisible] = useState(false);
 
   const isDarkMode = useSelector(state => state.theme.isDarkMode);
 
@@ -225,6 +229,17 @@ const DataTableClients = () => {
       ],
     },
     {
+      title: 'Association',
+      children: [
+        {
+          title: <span style={{ color: 'red' }}>Nom</span>,
+          dataIndex: ['Association', 'association_name'],
+          key: 'Association',
+          width: 130,
+        },
+      ],
+    },
+    {
       title: 'Détails',
       dataIndex: 'details',
       key: 'details',
@@ -271,6 +286,8 @@ const DataTableClients = () => {
     fetchData();
   }, [tableParams.pagination.current, tableParams.pagination.pageSize, tableParams.filters, tableParams.order]);
 
+
+  /*------Handle Table ---------*/
   const handleDetailsClick = (record) => {
     setDrawerVisible(true);
     setSelectedRowData(record);
@@ -288,6 +305,7 @@ const DataTableClients = () => {
     }
   };
 
+  /*------Handle Client Drawer ADD ---------*/
   const handleToggleAddClientsDrawer = () => {
     setAddClientsDrawerVisible(!addClientsDrawerVisible);
   };
@@ -297,6 +315,7 @@ const DataTableClients = () => {
     setAddClientsDrawerVisible(false);
   };
 
+  /*------Handle Update Company Link ---------*/
   const handleUpdateCompanyClick = () => {
     setUpdateCompanyFormVisible(!updateCompanyFormVisible);
   };
@@ -307,9 +326,20 @@ const DataTableClients = () => {
     setDrawerVisible(!updateCompanyFormVisible);
   };
 
+  /*------Handle Update Association Link ---------*/
+  const handleUpdateAssociationClick = () => {
+    setUpdateAssociationFormVisible(!updateAssociationFormVisible);
+  };
+
+  const handleUpdateClientLinkAssociationSuccess = () => {
+    refreshData();
+    setUpdateAssociationFormVisible(!updateAssociationFormVisible);
+    setDrawerVisible(!updateAssociationFormVisible);
+  };
+
   return (
     <div className='maincontainclients'>
-      <Button type="dashed" className="btnAddcompany btn-orange" icon={<AppstoreAddOutlined />} onClick={handleToggleAddClientsDrawer}>
+      <Button type="dashed" className="btnAddcompany btn-orange" icon={<AppstoreAddOutlined />} onClick={handleToggleAddClientsDrawer} >
         Ajouter un Clients
       </Button>
       <Table
@@ -407,7 +437,7 @@ const DataTableClients = () => {
             <Divider />
 
             {updateCompanyFormVisible ? (
-              <div>
+              <div style={{ marginBottom: '90px' }}>
                 <CloseIcon onClick={handleUpdateCompanyClick} key={`BtnCloseFormFormUpdateLinkCompany-${selectedRowData.id}`} />
                 <FormUpdateLinkCompany
                   key={`FormUpdateLinkCompany-${selectedRowData.id}`}
@@ -450,6 +480,10 @@ const DataTableClients = () => {
                           <strong>N°Siret:</strong> {selectedRowData.Companies[0].company_num_siret}
                         </div>
                         <div>
+                          <InfoCircleOutlined />
+                          <strong>Code Naf:</strong> {selectedRowData.Companies[0].code_naf}
+                        </div>
+                        <div>
                           <EnvironmentOutlined />
                           <strong>Rue de l'entreprise:</strong> {selectedRowData.Companies[0].CompanyAdresses[0].company_adresse}
                         </div>
@@ -475,6 +509,78 @@ const DataTableClients = () => {
                 </Space>
               </div>
             )}
+            <Divider />
+            {updateAssociationFormVisible ? (
+              <div>
+                <CloseIcon onClick={handleUpdateAssociationClick} key={`BtnCloseFormFormUpdateLinkCompany-${selectedRowData.id}`} />
+                <FormUpdateLinkAssociation
+                  key={`FormUpdateLinkCompany-${selectedRowData.id}`}
+                  clientID={selectedRowData.id}
+                  onFinish={handleUpdateAssociationClick} onSuccess={handleUpdateClientLinkAssociationSuccess}
+                />
+              </div>
+            ) : (
+              <div className='ContainerAssociation'>
+
+                <h2>
+                  <ReconciliationOutlined style={{ marginRight: '8px' }} /> Association
+                  <Button
+                    className='ButtonLinkCompany'
+                    type="primary"
+                    onClick={handleUpdateAssociationClick}
+                    icon={<AppstoreAddOutlined />}
+                  >
+                    Lier une association
+                  </Button>
+                </h2>
+
+                <Space direction="vertical">
+                  <div className='containerinfodrawer'>
+                    {selectedRowData.Association !== null ? (
+                      <div>
+                        <div>
+                          <ReconciliationOutlined />
+                          <strong>Nom de l'association:</strong> {selectedRowData.Association.association_name}
+                        </div>
+                        <div>
+                          <PhoneOutlined />
+                          <strong>Téléphone de l'association:</strong> {selectedRowData.Association.association_telephone}
+                        </div>
+                        <div>
+                          <InfoCircleOutlined />
+                          <strong>N°Siret:</strong> {selectedRowData.Association.association_num_siret}
+                        </div>
+                        <div>
+                          <InfoCircleOutlined />
+                          <strong>Code Naf:</strong> {selectedRowData.Association.code_naf}
+                        </div>
+                        <div>
+                          <InfoCircleOutlined />
+                          <strong>Code Rna:</strong> {selectedRowData.Association.code_rna}
+                        </div>
+                        <div>
+                          <EnvironmentOutlined />
+                          <strong>Rue de l'association:</strong> {selectedRowData.Association.AssociationAdresse.association_adresse}
+                        </div>
+                        <div>
+                          <EnvironmentOutlined />
+                          <strong>Ville de l'association:</strong> {selectedRowData.Association.AssociationAdresse.association_ville}
+                        </div>
+                        <div>
+                          <EnvironmentOutlined />
+                          <strong>Code Postal de l'association:</strong> {selectedRowData.Association.AssociationAdresse.association_codepostal}
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <p>Aucune association liée.</p>
+                      </div>
+                    )}
+                  </div>
+                </Space>
+              </div>
+
+            )}
           </div>
         )
         }
@@ -485,12 +591,15 @@ const DataTableClients = () => {
         width={600}
         placement="right"
         closable={true}
-        onClose={() => setAddClientsDrawerVisible(false)}
+        onClose={handleToggleAddClientsDrawer}
         open={addClientsDrawerVisible}
         className={isDarkMode ? 'dark-drawer' : 'light-drawer'}
       >
-        <FormAddClients key="FormAddClients" onFinish={handleToggleAddClientsDrawer} onSuccess={handleAddClientSuccess} />
-      </Drawer>
+        <FormAddClients
+          key="FormAddClients"
+          onFinish={handleToggleAddClientsDrawer}
+          onSuccess={handleAddClientSuccess}
+        /></Drawer>
     </div >
   );
 };
