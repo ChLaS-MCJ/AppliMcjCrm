@@ -63,6 +63,7 @@ function SidebarButton({ collapsed, onClick }) {
 }
 function Sidebar({ collapsible, collapsed, onCollapse }) {
   const { colorBgContainer, boxShadow } = useCustomTheme(useSelector(state => state.theme.isDarkMode));
+  const userRole = useSelector(state => state.UserStore.role_id);
 
   const items = [
     {
@@ -89,6 +90,12 @@ function Sidebar({ collapsible, collapsed, onCollapse }) {
       key: 'Employe',
       icon: <UserOutlined />,
       label: <Link to={'/employe'}>Employé</Link>,
+    },
+
+    userRole === 1 && {
+      key: 'admin',
+      icon: <TeamOutlined />,
+      label: <Link to={'/admin'}>admin</Link>,
     },
   ];
 

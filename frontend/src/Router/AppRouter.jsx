@@ -17,6 +17,7 @@ const ClientsDetails = lazy(() => import('@/Pages/Private/ClientsDetails'));
 const Company = lazy(() => import('@/Pages/Private/Company'));
 const Association = lazy(() => import('@/Pages/Private/Association'));
 const Employe = lazy(() => import('@/Pages/Private/Employe'));
+const Admin = lazy(() => import('@/Pages/Private/Admin'));
 
 const AppRouter = () => {
   const element = useRoutes([
@@ -71,6 +72,10 @@ const AppRouter = () => {
         {
           path: 'employe',
           element: <Employe />,
+        },
+        {
+          path: 'admin',
+          element: <Admin />,
         },
         {
           path: '/',
