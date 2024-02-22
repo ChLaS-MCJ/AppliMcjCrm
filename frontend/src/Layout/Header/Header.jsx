@@ -44,7 +44,7 @@ const HeaderContent = () => {
 
   const ProfileDropdown = () => {
     return (
-      <div className="profileDropdown" onClick={() => navigate('/profile')}>
+      <div className="profileDropdown" onClick={() => navigate('/profil')}>
         <Avatar
           size="large"
           className="last"
@@ -107,7 +107,6 @@ const HeaderContent = () => {
 
       }}
     >
-
       <Dropdown
         menu={{
           items,
@@ -124,11 +123,8 @@ const HeaderContent = () => {
             backgroundColor: '#fde3cf',
             float: 'right',
           }}
-          size="large"
-        >
-          CHALAS
-        </Avatar>
-        {/* </Badge> */}
+          size={50}
+        />
       </Dropdown>
       <Divider type="vertical" style={{
         height: "100%"
