@@ -15,6 +15,8 @@ import { useSelector } from 'react-redux';
 
 import { UsersService } from '@/Services/Users.service';
 
+import UpdateProfilAdmin from '@/Forms/Users/FormUpdateProfilAdmin';
+
 function getColumnSearchProps(dataIndex) {
     return {
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -60,10 +62,12 @@ const DataTableEmploye = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [drawerVisible, setDrawerVisible] = useState(false);
+    const [FormUpdateAdmin, setFormUpdateAdmin] = useState(false);
 
     const [selectedRowData, setSelectedRowData] = useState(null);
 
     const isDarkMode = useSelector(state => state.theme.isDarkMode);
+    const userRole = useSelector(state => state.UserStore.role_id);
 
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -103,12 +107,30 @@ const DataTableEmploye = () => {
         }
     };
 
+    const refreshData = async () => {
+        setLoading(true);
+
+        try {
+            const result = await UsersService.getAllUser();
+            setData(result.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchData();
     }, [tableParams.pagination.current, tableParams.pagination.pageSize, tableParams.filters, tableParams.order]);
 
     const handleDrawerClose = () => {
         setDrawerVisible(false);
+        setFormUpdateAdmin(false);
+    };
+
+    const handleOpenForm = () => {
+        setFormUpdateAdmin(!FormUpdateAdmin);
     };
 
     const columns = [
@@ -232,10 +254,20 @@ const DataTableEmploye = () => {
 
                         <Divider />
 
+                        {userRole && userRole === 1 && (
+                            <div className='containerFormAdmin'>
+                                <Button type="primary" onClick={() => handleOpenForm()}>
+                                    {FormUpdateAdmin ? "Fermer le formulaire" : "Mettre à jour l'utilisateur"}
+                                </Button>
+
+                                {FormUpdateAdmin && (
+                                    <UpdateProfilAdmin initialUpdateProfilData={selectedRowData} onSuccess={handleDrawerClose} refreshData={refreshData} />
+                                )}
+                            </div>
+                        )}
                     </div>
-                )
-                }
-            </Drawer >
+                )}
+            </Drawer>
 
         </div>
     );

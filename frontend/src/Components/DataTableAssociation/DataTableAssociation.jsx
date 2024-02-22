@@ -73,6 +73,7 @@ const DataTableAssociation = () => {
     const [selectedRowData, setSelectedRowData] = useState(null);
 
     const isDarkMode = useSelector(state => state.theme.isDarkMode);
+    const userRole = useSelector(state => state.UserStore.role_id);
 
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -280,14 +281,16 @@ const DataTableAssociation = () => {
             >
                 {selectedRowData && (
                     <div className='DrawerClientContainer'>
-                        <Button
-                            type="primary" danger
-                            className="btnsuppcompany"
-                            icon={<DeleteOutlined />}
-                            onClick={() => handleDeleteAssociation(selectedRowData.id)}
-                        >
-                            Supprimer l'association
-                        </Button>
+                        {userRole && userRole === 1 && (
+                            <Button
+                                type="primary" danger
+                                className="btnsuppcompany"
+                                icon={<DeleteOutlined />}
+                                onClick={() => handleDeleteAssociation(selectedRowData.id)}
+                            >
+                                Supprimer l'association
+                            </Button>
+                        )}
 
                         <h2>
                             Identité de l'Association

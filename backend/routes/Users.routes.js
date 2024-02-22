@@ -26,5 +26,4 @@ router.patch('/:id', GuardMulter, userCtrl.updateUser);
 router.post('/untrash/:id', userCtrl.untrashUser);
 router.delete('/trash/:id', userCtrl.trashUser);
 router.delete('/:id', userCtrl.deleteUser);
-
 module.exports = router;

@@ -48,12 +48,23 @@ const getAllUser = async () => {
     }
 };
 
+const GetAllRoles = async () => {
+    try {
+        const response = await Axios.get(`/roles`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 export const UsersService = {
     registerUsers,
     updateUserProfile,
     getUserProfile,
-    getAllUser
-
+    getAllUser,
+    GetAllRoles
 };
 
 export default UsersService;

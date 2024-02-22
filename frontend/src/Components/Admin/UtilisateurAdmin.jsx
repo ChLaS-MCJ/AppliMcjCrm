@@ -1,10 +1,9 @@
 import React from 'react';
+import Employe from '@/Pages/Private/Employe';
 
 const UtilisateurAdmin = () => {
     return (
-        <div>
-            <p>user</p>
-        </div>
+        <Employe />
     );
 };
 
