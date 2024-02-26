@@ -89,7 +89,7 @@ const FormUpdateAssociation = ({ initialAssociationData, onSuccess }) => {
             content: 'Échec de la validation du formulaire',
         });
     };
-
+    console.log(initialAssociationData)
     return (
         <Form
             {...formItemLayout}
@@ -112,10 +112,10 @@ const FormUpdateAssociation = ({ initialAssociationData, onSuccess }) => {
                 association_num_siret: initialAssociationData.association_num_siret,
                 code_naf: initialAssociationData.code_naf,
                 code_rna: initialAssociationData.code_rna,
-                association_adresse: initialAssociationData.AssociationAdresse.association_adresse,
-                pays_id: initialAssociationData.AssociationAdresse.associationpays_id,
-                association_ville: initialAssociationData.AssociationAdresse.association_ville,
-                association_codepostal: initialAssociationData.AssociationAdresse.association_codepostal,
+                association_adresse: initialAssociationData.AssociationAdresses[0].association_adresse,
+                pays_id: initialAssociationData.AssociationAdresses[0].associationpays_id,
+                association_ville: initialAssociationData.AssociationAdresses[0].association_ville,
+                association_codepostal: initialAssociationData.AssociationAdresses[0].association_codepostal,
                 idAdresse: initialAssociationData.associationAdresse_id,
             }}
         >

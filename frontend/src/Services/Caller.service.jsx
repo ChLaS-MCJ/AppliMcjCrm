@@ -15,7 +15,7 @@
  *     console.error(error);
  *   });
  */
-import axios from 'axios'
+import axios from 'axios';
 import { API_BASE_URL } from '@/Config/ServerApiConfig';
 import { AuthService } from '@/Services';
 

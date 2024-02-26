@@ -30,6 +30,7 @@ const country_router = require('./routes/Country.routes');
 const clients_router = require('./routes/Clients.routes');
 const association_router = require('./routes/Association.routes');
 const roles_router = require('./routes/Roles.routes');
+const admin_router = require('./routes/Admin.routes');
 // Configuration de CORS à un seul endroit pour toutes les routes
 app.use(cors({
   origin: "*",
@@ -52,6 +53,7 @@ app.use('/api/country', country_router);
 app.use('/api/clients', clients_router);
 app.use('/api/association', association_router);
 app.use('/api/roles', roles_router);
+app.use('/api/admin', admin_router);
 
 app.use('/api/images', express.static(path.join(__dirname, 'Assets/Images')));
 

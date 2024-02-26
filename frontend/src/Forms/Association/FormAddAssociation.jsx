@@ -82,12 +82,6 @@ const AddAssociationForm = ({ onFinish, onSuccess }) => {
             <Form.Item
                 name="association_telephone"
                 label="Téléphone"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Veuillez entrer le numéro de téléphone de votre association !',
-                    },
-                ]}
                 style={{ width: '100%' }}
             >
                 <Input />
@@ -96,12 +90,6 @@ const AddAssociationForm = ({ onFinish, onSuccess }) => {
             <Form.Item
                 name="association_num_siret"
                 label="Numéro SIRET"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Veuillez entrer le numéro SIRET de votre association !',
-                    },
-                ]}
                 style={{ width: '100%' }}
             >
                 <Input />
@@ -110,12 +98,6 @@ const AddAssociationForm = ({ onFinish, onSuccess }) => {
             <Form.Item
                 name="code_naf"
                 label="Code Naf"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Veuillez entrer le code Naf !',
-                    },
-                ]}
                 style={{ width: '100%' }}
             >
                 <Input />

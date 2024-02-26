@@ -15,7 +15,7 @@ const rolesModel = (sequelize) => {
       allowNull: false,
       unique: true,
     },
-  }, { paranoid: true });
+  });
 
 };
 

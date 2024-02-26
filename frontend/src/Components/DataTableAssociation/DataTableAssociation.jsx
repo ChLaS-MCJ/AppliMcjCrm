@@ -49,7 +49,18 @@ function getColumnSearchProps(dataIndex) {
         ),
         onFilter: (value, record) => {
             const dataIndexArray = dataIndex.split('.');
-            const nestedValue = dataIndexArray.reduce((obj, key) => (obj && obj[key]) || undefined, record);
+            let nestedValue = record;
+            for (const key of dataIndexArray) {
+                if (nestedValue && key in nestedValue) {
+                    nestedValue = nestedValue[key];
+                    if (Array.isArray(nestedValue) && nestedValue.length > 0) {
+                        nestedValue = nestedValue[0];
+                    }
+                } else {
+                    nestedValue = undefined;
+                    break;
+                }
+            }
 
             if (typeof nestedValue === 'string') {
                 return nestedValue.toLowerCase().includes(value.toLowerCase());
@@ -139,6 +150,7 @@ const DataTableAssociation = () => {
         try {
             const result = await AssociationService.GetAllAssociation();
             setData(result.data);
+            console.log(result)
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -205,33 +217,33 @@ const DataTableAssociation = () => {
                     children: [
                         {
                             title: 'Rue',
-                            dataIndex: ['AssociationAdresse', 'association_adresse'],
+                            dataIndex: ['AssociationAdresses', [0], 'association_adresse'],
                             key: 'Rue',
                             width: 150,
-                            ...getColumnSearchProps('AssociationAdresse.association_adresse'),
+                            ...getColumnSearchProps('AssociationAdresses.association_adresse'),
                         },
                         {
                             title: 'Complément',
                             children: [
                                 {
                                     title: 'Pays',
-                                    dataIndex: ['country', 'nom_fr_fr'],
+                                    dataIndex: ['AssociationAdresses', [0], 'Country', 'nom_fr_fr'],
                                     key: 'Pays',
                                     width: 100,
                                 },
                                 {
                                     title: 'Ville',
-                                    dataIndex: ['AssociationAdresse', 'association_ville'],
+                                    dataIndex: ['AssociationAdresses', [0], 'association_ville'],
                                     key: 'Ville',
                                     width: 100,
-                                    ...getColumnSearchProps('AssociationAdresse.association_ville'),
+                                    ...getColumnSearchProps('AssociationAdresses.association_ville'),
                                 },
                                 {
                                     title: 'Code Postal',
-                                    dataIndex: ['AssociationAdresse', 'association_codepostal'],
+                                    dataIndex: ['AssociationAdresses', [0], 'association_codepostal'],
                                     key: 'Code Postal',
                                     width: 100,
-                                    ...getColumnSearchProps('AssociationAdresse.association_codepostal'),
+                                    ...getColumnSearchProps('AssociationAdresses.association_codepostal'),
                                 },
                             ],
                         },
@@ -334,19 +346,19 @@ const DataTableAssociation = () => {
                             <div className='containerinfodrawer'>
                                 <div>
                                     <EnvironmentOutlined />
-                                    <strong>Rue :</strong> {selectedRowData.AssociationAdresse.association_adresse}
+                                    <strong>Rue :</strong> {selectedRowData.AssociationAdresses[0].association_adresse}
                                 </div>
                                 <div>
                                     <BankOutlined />
-                                    <strong>Pays :</strong> {selectedRowData.country.nom_fr_fr}
+                                    <strong>Pays :</strong> {selectedRowData.AssociationAdresses[0].Country.nom_fr_fr}
                                 </div>
                                 <div>
                                     <EnvironmentOutlined />
-                                    <strong>Ville :</strong> {selectedRowData.AssociationAdresse.association_ville}
+                                    <strong>Ville :</strong> {selectedRowData.AssociationAdresses[0].association_ville}
                                 </div>
                                 <div>
                                     <EnvironmentOutlined />
-                                    <strong>Code Postal :</strong> {selectedRowData.AssociationAdresse.association_codepostal}
+                                    <strong>Code Postal :</strong> {selectedRowData.AssociationAdresses[0].association_codepostal}
                                 </div>
 
                                 {showForm && (

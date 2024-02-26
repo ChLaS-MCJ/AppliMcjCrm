@@ -36,26 +36,26 @@ db.AssociationAdresse = require('./models/AssociationAdresse.models')(sequelize)
 db.User.belongsTo(db.Role, { foreignKey: 'role_id' });
 db.Role.hasMany(db.User, { foreignKey: 'role_id', onDelete: 'NO ACTION' })
 
-db.Clients.hasMany(db.Company, { foreignKey: 'clients_id' })
-db.Company.belongsTo(db.Clients, { foreignKey: 'clients_id', onDelete: 'NO ACTION' });
+db.Clients.hasMany(db.Company, { foreignKey: 'clients_id', onDelete: 'cascade' })
+db.Company.belongsTo(db.Clients, { foreignKey: 'clients_id', onDelete: 'cascade' });
 
 db.Company.hasMany(db.CompanyAdresse, { foreignKey: 'company_id', onDelete: 'cascade' });
-db.CompanyAdresse.belongsTo(db.Company, { foreignKey: 'company_id' });
+db.CompanyAdresse.belongsTo(db.Company, { foreignKey: 'company_id', onDelete: 'cascade' });
 
 db.Country.hasMany(db.Company, { foreignKey: 'pays_id', onDelete: 'NO ACTION' })
 db.Company.belongsTo(db.Country, { foreignKey: 'pays_id' });
 
-db.ClientAdresse.hasMany(db.Clients, { foreignKey: 'clientsAdresse_id', onDelete: 'cascade' })
-db.Clients.belongsTo(db.ClientAdresse, { foreignKey: 'clientsAdresse_id', onDelete: 'NO ACTION' });
+db.Clients.hasMany(db.ClientAdresse, { foreignKey: 'clients_id', onDelete: 'cascade', });
+db.ClientAdresse.belongsTo(db.Clients, { foreignKey: 'clients_id', onDelete: 'cascade', });
 
 db.Country.hasMany(db.ClientAdresse, { foreignKey: 'clientAdresseCountry_id', onDelete: 'NO ACTION' })
 db.ClientAdresse.belongsTo(db.Country, { foreignKey: 'clientAdresseCountry_id' });
 
-db.Association.hasMany(db.Clients, { foreignKey: 'clientsAsso_id' })
-db.Clients.belongsTo(db.Association, { foreignKey: 'clientsAsso_id', onDelete: 'NO ACTION' });
+db.Association.hasMany(db.Clients, { foreignKey: 'clientsAsso_id', onDelete: 'cascade' })
+db.Clients.belongsTo(db.Association, { foreignKey: 'clientsAsso_id', onDelete: 'cascade' });
 
-db.AssociationAdresse.hasMany(db.Association, { foreignKey: 'associationAdresse_id', onDelete: 'cascade' });
-db.Association.belongsTo(db.AssociationAdresse, { foreignKey: 'associationAdresse_id' });
+db.Association.hasMany(db.AssociationAdresse, { foreignKey: 'association_id', onDelete: 'cascade' });
+db.AssociationAdresse.belongsTo(db.Association, { foreignKey: 'association_id', onDelete: 'cascade' });
 
 db.Country.hasMany(db.AssociationAdresse, { foreignKey: 'associationpays_id', onDelete: 'NO ACTION' })
 db.AssociationAdresse.belongsTo(db.Country, { foreignKey: 'associationpays_id' });

@@ -108,12 +108,14 @@ exports.DeleteCompany = async (req, res) => {
 
     try {
         const company = await Company.findOne({ where: { id: companyId } });
+        const companyadresse = await CompanyAdresse.findOne({ where: { company_id: companyId } });
 
         if (!company) {
             return res.status(404).json({ message: 'Company not found' });
         }
 
         await company.destroy();
+        await companyadresse.destroy();
 
         return res.json({ message: 'Company deleted successfully' });
     } catch (error) {

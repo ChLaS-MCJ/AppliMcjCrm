@@ -58,22 +58,22 @@ exports.addClient = async (req, res) => {
 
     try {
 
-        const newAdresseClient = await ClientAdresse.create({
-            client_adresse_adresse: clientData.clients_adresse,
-            client_adresse_ville: clientData.clients_ville,
-            client_adresse_codepostal: clientData.clients_codepostal,
-            clientAdresseCountry_id: clientData.pays_id,
-        });
-
-        const newAdresseClientId = newAdresseClient.id;
-
         const newClient = await Client.create({
             clients_name: clientData.clients_name,
             clients_prenom: clientData.clients_prenom,
             clients_civilite: clientData.clients_civilite,
             clients_tel: clientData.clients_tel,
             clients_mail: clientData.clients_mail,
-            clientsAdresse_id: newAdresseClientId,
+        });
+
+        const newClientId = newClient.id;
+
+        ClientAdresse.create({
+            client_adresse_adresse: clientData.clients_adresse,
+            client_adresse_ville: clientData.clients_ville,
+            client_adresse_codepostal: clientData.clients_codepostal,
+            clientAdresseCountry_id: clientData.pays_id,
+            clients_id: newClientId,
         });
 
         if ('associationId' in clientData) {
@@ -147,12 +147,14 @@ exports.deleteClient = async (req, res) => {
 
     try {
         const client = await Client.findOne({ where: { id: clientId } });
+        const adresseclient = await ClientAdresse.findOne({ where: { clients_id: clientId } });
 
         if (!client) {
             return res.status(404).json({ message: 'Client not found' });
         }
 
         await client.destroy();
+        await adresseclient.destroy();
 
         return res.json({ message: 'Client deleted successfully' });
     } catch (error) {

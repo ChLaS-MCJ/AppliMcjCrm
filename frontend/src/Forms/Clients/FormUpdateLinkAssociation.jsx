@@ -25,11 +25,11 @@ const FromUpdateLinkAssociation = ({ onFinish, onSuccess, clientID }) => {
     const [form] = Form.useForm();
     const [AllAssociations, setAssociations] = useState({});
     const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const AssociationsData = await AssociationService.GetAllAssociation();
+                console.log(AssociationsData)
                 setAssociations(AssociationsData);
             } catch (error) {
                 console.error('Error fetching associations:', error);

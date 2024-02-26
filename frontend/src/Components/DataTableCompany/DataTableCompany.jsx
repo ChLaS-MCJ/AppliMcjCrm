@@ -47,7 +47,27 @@ function getColumnSearchProps(dataIndex) {
         </Space>
       </div>
     ),
-    onFilter: (value, record) => record[dataIndex].toLowerCase().includes(value.toLowerCase()),
+    onFilter: (value, record) => {
+      const dataIndexArray = dataIndex.split('.');
+      let nestedValue = record;
+      for (const key of dataIndexArray) {
+        if (nestedValue && key in nestedValue) {
+          nestedValue = nestedValue[key];
+          if (Array.isArray(nestedValue) && nestedValue.length > 0) {
+            nestedValue = nestedValue[0];
+          }
+        } else {
+          nestedValue = undefined;
+          break;
+        }
+      }
+
+      if (typeof nestedValue === 'string') {
+        return nestedValue.toLowerCase().includes(value.toLowerCase());
+      }
+
+      return false;
+    },
     render: (text) => text,
   };
 }
@@ -190,7 +210,7 @@ const DataTableCompany = () => {
               dataIndex: ['CompanyAdresses', 0, 'company_adresse'],
               key: 'Rue',
               width: 150,
-              ...getColumnSearchProps('CompanyAdresses'),
+              ...getColumnSearchProps('CompanyAdresses.company_adresse'),
             },
             {
               title: 'Complément',
@@ -206,14 +226,14 @@ const DataTableCompany = () => {
                   dataIndex: ['CompanyAdresses', 0, 'company_ville'],
                   key: 'Ville',
                   width: 100,
-                  ...getColumnSearchProps('societeVille'),
+                  ...getColumnSearchProps('CompanyAdresses.company_ville'),
                 },
                 {
                   title: 'Code Postal',
                   dataIndex: ['CompanyAdresses', 0, 'company_codepostal'],
                   key: 'Code Postal',
                   width: 100,
-                  ...getColumnSearchProps('societeCodePostal'),
+                  ...getColumnSearchProps('CompanyAdresses.company_codepostal'),
                 },
               ],
             },

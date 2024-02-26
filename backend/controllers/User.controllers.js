@@ -1,8 +1,8 @@
 /***********************************/
 /*** Import des module nécessaires */
-const db = require('../db.config')
-const User = db.User
-const Role = db.Role
+const db = require('../db.config');
+const User = db.User;
+const Role = db.Role;
 const path = require('path');
 require('dotenv').config();
 const bcrypt = require('bcrypt');

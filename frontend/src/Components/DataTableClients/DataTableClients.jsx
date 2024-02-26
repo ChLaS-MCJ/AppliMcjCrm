@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Table, Input, Button, Space, Drawer, Divider, Breadcrumb } from 'antd';
+import { Table, Input, Button, Space, Drawer, Divider, Breadcrumb, message } from 'antd';
 import { Link } from 'react-router-dom';
 import {
   SearchOutlined,
@@ -17,7 +17,8 @@ import {
   RightOutlined,
   AppstoreAddOutlined,
   CloseOutlined,
-  ReconciliationOutlined
+  ReconciliationOutlined,
+  DeleteOutlined
 } from '@ant-design/icons';
 
 import { useSelector } from 'react-redux';
@@ -57,7 +58,18 @@ function getColumnSearchProps(dataIndex) {
     ),
     onFilter: (value, record) => {
       const dataIndexArray = dataIndex.split('.');
-      const nestedValue = dataIndexArray.reduce((obj, key) => (obj && obj[key]) || undefined, record);
+      let nestedValue = record;
+      for (const key of dataIndexArray) {
+        if (nestedValue && key in nestedValue) {
+          nestedValue = nestedValue[key];
+          if (Array.isArray(nestedValue) && nestedValue.length > 0) {
+            nestedValue = nestedValue[0];
+          }
+        } else {
+          nestedValue = undefined;
+          break;
+        }
+      }
 
       if (typeof nestedValue === 'string') {
         return nestedValue.toLowerCase().includes(value.toLowerCase());
@@ -138,33 +150,33 @@ const DataTableClients = () => {
       children: [
         {
           title: 'Rue',
-          dataIndex: ['ClientAdresse', 'client_adresse_adresse'],
+          dataIndex: ['ClientAdresses', [0], 'client_adresse_adresse'],
           key: 'client_adresse_adresse',
           width: 150,
-          ...getColumnSearchProps('ClientAdresse.client_adresse_adresse'),
+          ...getColumnSearchProps('ClientAdresses.client_adresse_adresse'),
         },
         {
           title: 'Complément',
           children: [
             {
               title: 'Pays',
-              dataIndex: ['ClientAdresse', 'Country', 'nom_fr_fr'],
+              dataIndex: ['ClientAdresses', [0], 'Country', 'nom_fr_fr'],
               key: 'pays',
               width: 100,
             },
             {
               title: 'Ville',
-              dataIndex: ['ClientAdresse', 'client_adresse_ville'],
+              dataIndex: ['ClientAdresses', [0], 'client_adresse_ville'],
               key: 'ville',
               width: 100,
-              ...getColumnSearchProps('ClientAdresse.client_adresse_ville'),
+              ...getColumnSearchProps('ClientAdresses.client_adresse_ville'),
             },
             {
               title: 'Code Postal',
-              dataIndex: ['ClientAdresse', 'client_adresse_codepostal'],
+              dataIndex: ['ClientAdresses', [0], 'client_adresse_codepostal'],
               key: 'codePostal',
               width: 100,
-              ...getColumnSearchProps('ClientAdresse.client_adresse_codepostal'),
+              ...getColumnSearchProps('ClientAdresses.client_adresse_codepostal'),
             },
           ],
         },
@@ -262,6 +274,7 @@ const DataTableClients = () => {
     try {
       const result = await ClientService.GetAllClients();
       setData(result.data.map(item => ({ ...item, key: item.id })));
+
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -271,7 +284,6 @@ const DataTableClients = () => {
 
   const refreshData = async () => {
     setLoading(true);
-
     try {
       const result = await ClientService.GetAllClients();
       setData(result.data.map(item => ({ ...item, key: item.id })));
@@ -285,7 +297,6 @@ const DataTableClients = () => {
   useEffect(() => {
     fetchData();
   }, [tableParams.pagination.current, tableParams.pagination.pageSize, tableParams.filters, tableParams.order]);
-
 
   /*------Handle Table ---------*/
   const handleDetailsClick = (record) => {
@@ -337,6 +348,21 @@ const DataTableClients = () => {
     setDrawerVisible(!updateAssociationFormVisible);
   };
 
+  const handleClientsCompany = async (ClientId) => {
+    try {
+      const confirmDelete = window.confirm(`Êtes-vous sûr de vouloir supprimer le client avec l'ID "${ClientId}" ?`);
+      if (!confirmDelete) return;
+
+      await ClientService.DeleteClient(ClientId);
+      message.success('Client supprimée avec succès!');
+      setDrawerVisible(false);
+      refreshData();
+    } catch (error) {
+      console.error('Erreur lors de la suppression du client :', error);
+      message.error('Erreur lors de la suppression du client.');
+    }
+  };
+
   return (
     <div className='maincontainclients'>
       <Button type="dashed" className="btnAddcompany btn-orange" icon={<AppstoreAddOutlined />} onClick={handleToggleAddClientsDrawer} >
@@ -363,6 +389,15 @@ const DataTableClients = () => {
       >
         {selectedRowData && (
           <div className='DrawerClientContainer'>
+
+            <Button
+              type="primary" danger
+              className="btnsuppcompany"
+              icon={<DeleteOutlined />}
+              onClick={() => handleClientsCompany(selectedRowData.id)}
+            >
+              Supprimer le client
+            </Button>
 
             <Breadcrumb
               style={{ paddingLeft: '20px' }}
@@ -415,21 +450,22 @@ const DataTableClients = () => {
                   <MailOutlined />
                   <strong>Mail:</strong> {selectedRowData.clients_mail}
                 </div>
+
                 <div>
                   <EnvironmentOutlined />
-                  <strong>Rue:</strong> {selectedRowData.ClientAdresse.client_adresse_adresse}
+                  <strong>Rue:</strong> {selectedRowData.ClientAdresses[0].client_adresse_adresse}
                 </div>
                 <div>
                   <EnvironmentOutlined />
-                  <strong>Code Postal:</strong> {selectedRowData.ClientAdresse.client_adresse_codepostal}
+                  <strong>Code Postal:</strong> {selectedRowData.ClientAdresses[0].client_adresse_codepostal}
                 </div>
                 <div>
                   <EnvironmentOutlined />
-                  <strong>Ville:</strong> {selectedRowData.ClientAdresse.client_adresse_ville}
+                  <strong>Ville:</strong> {selectedRowData.ClientAdresses[0].client_adresse_ville}
                 </div>
                 <div>
                   <EnvironmentOutlined />
-                  <strong>Pays:</strong> {selectedRowData.ClientAdresse.Country.nom_fr_fr}
+                  <strong>Pays:</strong> {selectedRowData.ClientAdresses[0].Country.nom_fr_fr}
                 </div>
               </div>
             </Space>
@@ -560,15 +596,15 @@ const DataTableClients = () => {
                         </div>
                         <div>
                           <EnvironmentOutlined />
-                          <strong>Rue de l'association:</strong> {selectedRowData.Association.AssociationAdresse.association_adresse}
+                          <strong>Rue de l'association:</strong> {selectedRowData.Association.AssociationAdresses[0].association_adresse}
                         </div>
                         <div>
                           <EnvironmentOutlined />
-                          <strong>Ville de l'association:</strong> {selectedRowData.Association.AssociationAdresse.association_ville}
+                          <strong>Ville de l'association:</strong> {selectedRowData.Association.AssociationAdresses[0].association_ville}
                         </div>
                         <div>
                           <EnvironmentOutlined />
-                          <strong>Code Postal de l'association:</strong> {selectedRowData.Association.AssociationAdresse.association_codepostal}
+                          <strong>Code Postal de l'association:</strong> {selectedRowData.Association.AssociationAdresses[0].association_codepostal}
                         </div>
                       </div>
                     ) : (

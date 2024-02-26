@@ -7,23 +7,16 @@ const Clients = db.Clients;
 exports.GetAllAssociation = async (req, res) => {
     try {
         const associations = await Association.findAll({
-            include: [AssociationAdresse, Clients],
+            include: [
+                {
+                    model: AssociationAdresse,
+                    include: [Country],
+                },
+                Clients,
+            ],
         });
 
-        const associationsWithAddressId = await Promise.all(
-            associations.map(async (association) => {
-                const associationPaysId = association?.AssociationAdresse?.associationpays_id;
-                const country = await Country.findOne({ where: { id: associationPaysId } });
-
-                return {
-                    ...association.toJSON(),
-                    associationPaysId: associationPaysId,
-                    country: country ? country.toJSON() : null,
-                };
-            })
-        );
-
-        return res.json({ data: associationsWithAddressId });
+        return res.json({ data: associations });
     } catch (error) {
         return res.status(500).json({ message: 'Database Error', error });
     }
@@ -53,14 +46,6 @@ exports.AddAssociation = async (req, res) => {
     const associationData = req.body;
 
     try {
-        const newAssociationAdresse = await AssociationAdresse.create({
-            association_adresse: associationData.association_adresse,
-            association_ville: associationData.association_ville,
-            association_codepostal: associationData.association_codepostal,
-            associationpays_id: associationData.pays_id,
-        });
-
-        const associationAdresseId = newAssociationAdresse.id;
 
         const newAssociation = await Association.create({
             association_name: associationData.association_name,
@@ -68,7 +53,16 @@ exports.AddAssociation = async (req, res) => {
             association_num_siret: associationData.association_num_siret,
             code_naf: associationData.code_naf,
             code_rna: associationData.code_rna,
-            associationAdresse_id: associationAdresseId,
+        });
+
+        const associationId = newAssociation.id;
+
+        const newAssociationAdresse = await AssociationAdresse.create({
+            association_adresse: associationData.association_adresse,
+            association_ville: associationData.association_ville,
+            association_codepostal: associationData.association_codepostal,
+            associationpays_id: associationData.pays_id,
+            association_id: associationId,
         });
 
         return res.status(201).json({ message: 'Association added successfully', data: newAssociation });
@@ -89,6 +83,8 @@ exports.UpdateAssociation = async (req, res) => {
             return res.status(404).json({ message: 'Association not found' });
         }
 
+        const associationadresse = await AssociationAdresse.findOne({ where: { association_id: association.id } });
+
         let objectassociation = {
             id: updatedData.id,
             association_name: updatedData.association_name,
@@ -103,17 +99,20 @@ exports.UpdateAssociation = async (req, res) => {
             association_ville: updatedData.association_ville,
             association_codepostal: updatedData.association_codepostal,
             associationpays_id: updatedData.pays_id,
+            association_id: objectassociation.id,
         }
 
         await association.update(objectassociation);
-        let updatedAssociation = await AssociationAdresse.update(objectassociationAdresse, { where: { id: updatedData.idAdresse } });
 
-        return res.json({ message: 'Assocation updated successfully', data: updatedAssociation });
+        let updatedAssociation = await AssociationAdresse.update(objectassociationAdresse, { where: { id: associationadresse.id } });
+
+        return res.json({ message: 'Association updated successfully', data: updatedAssociation });
     } catch (error) {
         console.error('Error updating association:', error);
         return res.status(500).json({ message: 'Database Error', error: error.message });
     }
 }
+
 
 exports.DeleteAssociation = async (req, res) => {
     const associationId = parseInt(req.params.id);
