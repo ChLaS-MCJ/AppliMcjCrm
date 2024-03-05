@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { Tabs } from 'antd';
-
+import ClientDelAdmin from './ElementDelAdmin/ClientDelAdmin';
+import CompanyDelAdmin from './ElementDelAdmin/CompanyDelAdmin';
 const ElementDelAdmin = () => {
 
     const items = [
         {
             key: '1',
             label: 'Clients',
-            children: "",
+            children: <ClientDelAdmin />,
         },
         {
             key: '2',
             label: 'Entreprises',
-            children: "",
+            children: <CompanyDelAdmin />,
         },
         {
             key: '3',

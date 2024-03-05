@@ -99,7 +99,6 @@ const DataTableEmploye = () => {
         try {
             const result = await UsersService.getAllUser();
             setData(result.data);
-            console.log(result)
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {

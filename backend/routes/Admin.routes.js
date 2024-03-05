@@ -27,5 +27,7 @@ router.get('/company', adminController.GetAllCompanyDel)
 router.post('/associations', adminController.GetAllAssociationsDel)
 router.patch('/employe', adminController.GetAllAssociationsDel)
 
+router.post('/restoreclients/:id', adminController.RestoreClientsDel)
+router.post('/restorecompany/:id', adminController.RestoreCompanyDel)
 
 module.exports = router
